@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author alons
+ *
+ */
+module OnlineChess {
+}
