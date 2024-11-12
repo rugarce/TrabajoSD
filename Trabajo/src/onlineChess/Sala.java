@@ -37,6 +37,20 @@ public class Sala implements Runnable{
 		//3: Enviamos toda esa informacion a userB EN FORMA DE OBJETOS (podría ser, por ejemplo un ArrayList<Map<Pieza, Posicion>>)
 		//4: Recibiremos del usuario un objeto Pieza y uno Posicion que nos indica qué pieza quiere mover a donde
 		//5: Utilizando las funciones de board, movemos la pieza como desea el usuario
+		//6: Almacenamos el nuevo movimiento en los ficheros nombreusuariobancas.txt y nombreusuationegras.txt
+		
+			//-- OJO--
+			//Será importante al escribir en el fichero, no borrar lo que ya está escrito, el fichero funcionará como una especie de log
+			//La estructura del contenido del fichero puede ser algo así como
+			
+			//nombreusuario.txt
+			//NUEVA PARTIDA nombreusuarionegras VS nombreusuarioblancas
+			//nombreusuarionegras Alfil (0,0) -> (1,2) 
+			//nombreusuarioblancas Peon (1,1) -> (2,2) 
+			
+			//para hacer el tema del fichero creo que tendremos que utilizar un fileoutputstream
+		
+		
 		//6: Comprobamos quienGana() para ver si la partida ha finalizado
 		//7: Actualizamos la lista Users de Server con las nuevas puntuaciones
 		
