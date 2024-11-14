@@ -116,7 +116,7 @@ public class Board {
 		}
 		
 		if(!reyN && !reyB) {
-			//ha habido un error;
+			//ha habido un error
 		}
 		
 		if(!reyN && reyB) {

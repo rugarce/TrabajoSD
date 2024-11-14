@@ -76,6 +76,7 @@ public class Client {
 		}
 	}
 	
+	
 	static String getOpcion(Scanner scanner) {
 		System.out.println("Qué desea hacer?");
 		System.out.println("-UNIRME A PARTIDA");

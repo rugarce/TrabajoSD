@@ -49,6 +49,7 @@ public class AtenderUsuario implements Runnable {
 			AQUI SE DEBE RECIBIR UNA LÍNEA QUE INDIQUE QUE QUEREMOS HACER, SI QUEREMOS UNIRNOS A UNA PARTIDA, MOSTRAR LA PUNTUACION, OBTENER EL HISTORIAL DE PARTIDAS ETC 
 			*/
 			
+			
 			String action = action = ois.readLine();
 		
 			/*
