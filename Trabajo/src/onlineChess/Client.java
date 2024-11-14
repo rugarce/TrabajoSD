@@ -17,16 +17,15 @@ public class Client {
 		
 		try {
 			s = new Socket("localhost", 55555);
-			
-			System.out.println("Conectado");
 
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 			
 			System.out.println("Ingrese su nombre de usuario:");
-			String username = scanner.next();
+			String username = scanner.nextLine();
 			
 			oos.writeBytes(username+"\n");
+			oos.flush();
 			
 			String loginResponse = ois.readLine();
 			
@@ -42,8 +41,9 @@ public class Client {
 				}
 			}
 			
+
 			String opcion = getOpcion(scanner);
-			
+
 			while (opcion != "DESCONECTAR") {
 				switch (opcion) {
 				case "UNIRME A PARTIDA":
@@ -82,7 +82,7 @@ public class Client {
 		System.out.println("-OBTENER HISTORIAL");
 		System.out.println("-LISTADO PUNTUACIONES");
 		System.out.println("-DESCONECTAR");
-		return scanner.next();
+		return scanner.nextLine();
 	}
 	
 	static void play(ObjectInputStream ois, ObjectOutputStream oos) throws IOException {

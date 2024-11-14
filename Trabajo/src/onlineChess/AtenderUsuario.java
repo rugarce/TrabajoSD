@@ -15,6 +15,8 @@ public class AtenderUsuario implements Runnable {
 	
 	@Override
 	public void run() {
+		System.out.println("Inicio");
+		
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
 
@@ -22,11 +24,10 @@ public class AtenderUsuario implements Runnable {
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 			
-			String username = "";
-			String line;
-			while((line = ois.readLine()) != null){
-				username = line;
-			}
+			
+			String username = ois.readLine();
+
+			System.out.println("Recibido el nombre de usuario "+username);
 			
 			if(Server.connectedUsers.contains(username)) {
 				oos.writeBytes("ERROR:usuario ya conectado\n");
@@ -86,9 +87,11 @@ public class AtenderUsuario implements Runnable {
 							Server.waitingSalasThreads.add(t);
 
 							//INICIAMOS EL HILO
+							System.out.println("Iniciando sala...");
 							t.start();
 							
 							t.join();
+							System.out.println("Partida finalizada...");
 							//LA PARTIDA HA ACABADO
 						}
 					break;

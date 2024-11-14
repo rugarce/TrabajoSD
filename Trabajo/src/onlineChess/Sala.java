@@ -32,6 +32,7 @@ public class Sala implements Runnable{
 	
 	@Override
 	public void run() {
+		System.out.println("SALA INCIADA, A LA ESPERA DE LLENARSE PARA EMPEZAR");
 		try {
             latch.await(); // Espera hasta que el contador sea cero
             System.out.println("Ambos usuarios están presentes. Comienza la partida.");
