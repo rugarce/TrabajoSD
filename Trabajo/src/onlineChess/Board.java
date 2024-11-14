@@ -111,7 +111,7 @@ public class Board {
 		boolean reyB = false;
 		for (Pieza pieza : piezasB) {
 		    if(pieza.getTipo() == 4) {
-		    	reyN = true;
+		    	reyB = true;
 		    }
 		}
 		

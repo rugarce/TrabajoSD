@@ -37,6 +37,7 @@ public class Sala implements Runnable{
             latch.await(); // Espera hasta que el contador sea cero
             System.out.println("Ambos usuarios están presentes. Comienza la partida.");
             
+            
             //logica de la sala
     		
     		//AQUI EN UN WHILE SECUENCIALMENTE HAREMOS
