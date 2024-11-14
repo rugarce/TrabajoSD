@@ -1,11 +1,13 @@
 package onlineChess;
 
-public class Pieza {
+import java.io.Serializable;
+
+public class Pieza implements Serializable {
 	String[] piezasCodes = new String[] { "P", "C", "A", "D", "R", "T"};
 	String[] piezasDict = new String[] { "Peon", "Caballo", "Alfil", "Dama", "Rey", "Torre"};
 										// 0		1			2		3		4		5
 	private int tipo;
-	private boolean lado; //solo acepta "Negras" o "Blancas"
+	private boolean lado; //solo acepta "Negras"(false) o "Blancas"(true)
 	private Posicion posicion;
 	
 	Pieza(int tipo, boolean lado, Posicion posicion){
@@ -40,5 +42,9 @@ public class Pieza {
 	
 	public void setPosicion(Posicion posicion) {
 		this.posicion = posicion;
+	}
+	
+	public String toString() {
+		return "("+ posicion.fila() + "," + posicion.columna() + ")";
 	}
 }

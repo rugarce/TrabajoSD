@@ -1,8 +1,9 @@
 package onlineChess;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable{
 	private Pieza[][] tablero;
 	//tablero[i][j] representa la ficha del tablero en la fila i y columna j
 	//la posicion [0][0] corresponde con la esquina izquierda inferior y la [7][7] la derecha superior
