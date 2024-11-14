@@ -19,9 +19,11 @@ public class Server {
 	static ArrayList<String> connectedUsers = new ArrayList<String>();
 	
 	static ArrayList<Sala> runningSalas = new ArrayList<Sala>();
+	static ArrayList<Thread> runningSalasThreads = new ArrayList<Thread>();
 	static ArrayList<Sala> waitingSalas = new ArrayList<Sala>();
+	static ArrayList<Thread> waitingSalasThreads = new ArrayList<Thread>();
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		ExecutorService pool = null;
 		try(ServerSocket soc = new ServerSocket(55555)) {
 			pool = Executors.newCachedThreadPool();
@@ -54,15 +56,7 @@ public class Server {
 					}
 					oos.flush();
 					
-					/*
-					AQUI SE DEBE RECIBIR UNA LÍNEA QUE INDIQUE QUE QUEREMOS HACER, SI QUEREMOS UNIRNOS A UNA PARTIDA, MOSTRAR LA PUNTUACION, OBTENER EL HISTORIAL DE PARTIDAS ETC 
-					*/
-					
 					String action = ois.readLine();
-					
-					/*
-					* 
-					*/
 					
 					switch(action) {
 						case ("UNIRME A PARTIDA"):
@@ -102,17 +96,34 @@ public class Server {
 				pool.shutdown();
 			}
 		}
+	}*/
+	
+	public static void main(String[] args) {
+		ExecutorService pool = null;
+		try(ServerSocket soc = new ServerSocket(55555)) {
+			pool = Executors.newCachedThreadPool();
+			Socket s = null;
+			
+			while(!Thread.interrupted()) {
+				try {
+					s = soc.accept();
+					
+					//admitimos un nuevo usuario y AtenderUsuario le atiende
+					System.out.println("atendido");
+					AtenderUsuario peticion = new AtenderUsuario(s);
+								
+					pool.execute(peticion);
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(pool != null) {
+				pool.shutdown();
+			}
+		}
 	}
 	
-	static void mostrarHistorial(Socket s, Usuario user) {
-		//a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado en alguna carpeta que ceemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y le manda todo el contenido al usuario que de lo descargara 
-		//enviaremos el fichero en forma de bytes, necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
-	}
-	
-	static void listadoPuntuaciones(ObjectOutputStream oos, Usuario user) {
-		//a través del socket, le mandará un Map<String, Integer> al usuario con la información de todos los usuarios y sus puntuaciones
-		//OJO LE ENVIAREMOS UN OBJETO oos.writeObject(Map<String, Integer>);
-		
-	}
-
 }
