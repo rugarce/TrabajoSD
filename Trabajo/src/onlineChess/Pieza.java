@@ -44,6 +44,10 @@ public class Pieza implements Serializable {
 		this.posicion = posicion;
 	}
 	
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
+	
 	public String toString() {
 		return "("+ posicion.fila() + "," + posicion.columna() + ")";
 	}

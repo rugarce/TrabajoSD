@@ -1,5 +1,6 @@
 package onlineChess;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,7 +17,11 @@ public class Sala implements Runnable{
 	
 	private Board board;
 	
-	 private CountDownLatch latch = new CountDownLatch(1);
+	private CountDownLatch latch = new CountDownLatch(1);
+	 
+	// Archivos de historial para cada jugador
+    private FileOutputStream fileOutputB;
+    private FileOutputStream fileOutputN;
 	
 	//el primer usuario en entrar a la sala maneja las blancas
 	Sala(Socket socketUserB, Usuario userB){
@@ -24,14 +29,37 @@ public class Sala implements Runnable{
 		this.userB = userB;
 		
 		this.board = new Board();
+		
+		// Crear archivo de historial para el usuario de las blancas
+		try {
+            fileOutputB = new FileOutputStream(userB.getNombre() + "Blancas.txt", true); 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 	
 	public synchronized  void unirseNegras(Socket socketUserN, Usuario userN) {
 		this.socketUserN = socketUserN;
 		this.userN = userN;
 		
+		// Crear archivo de historial para el usuario de las negras
+        try {
+            fileOutputN = new FileOutputStream(userN.getNombre() + "Negras.txt", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		
 		latch.countDown(); //reducimos el contador, indicando que podemos comenzar la partida
 	}
+	
+	// Método para escribir en el archivo de historial
+    public void escribirEnHistorial(FileOutputStream fileOutputStream, String texto) {
+        try {
+            fileOutputStream.write(texto.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	@Override
 	public void run() {
@@ -64,6 +92,10 @@ public class Sala implements Runnable{
     		oosB.flush();
     		oosN.flush();
     		
+    		// Registrar inicio de la partida en los archivos de los usuarios
+            escribirEnHistorial(fileOutputB, "NUEVA PARTIDA " + userB.getNombre() + " VS " + userN.getNombre() + "\n");
+            escribirEnHistorial(fileOutputN, "NUEVA PARTIDA " + userB.getNombre() + " VS " + userN.getNombre() + "\n");
+    		
     		boolean lado = false;
     		
     		while(board.quienGana() == null) {
@@ -87,8 +119,12 @@ public class Sala implements Runnable{
 	    			Pieza piezaComida = board.moverPieza(pieza, to);
 
     				System.out.println("Las blancas mueven el " + pieza.getNombre() + " de " + from.toString() + " a " + to.toString());
+    				String movimiento = userB.getNombre() + " " + pieza.getNombre() + " " + from.toString() + " -> " + to.toString() + "\n";
+                    escribirEnHistorial(fileOutputB, movimiento); // Registrar movimiento
 	    			if(piezaComida != null) {
 	    				System.out.println("Las blancas se comen a " + piezaComida.getNombre());
+	    				String comida = userB.getNombre() + " se come a " + piezaComida.getNombre() + "\n";
+                        escribirEnHistorial(fileOutputB, comida); // Registrar comida
 	    			}
     			}else {
     				oosN.writeBytes("CONTINUA\n");
@@ -109,22 +145,13 @@ public class Sala implements Runnable{
 	    			Pieza piezaComida = board.moverPieza(pieza, to);
 	    			
 	    			System.out.println("Las negras mueven el " + pieza.getNombre() + " de " + from.toString() + " a " + to.toString());
+	    			String movimiento = userN.getNombre() + " " + pieza.getNombre() + " " + from.toString() + " -> " + to.toString() + "\n";
+                    escribirEnHistorial(fileOutputN, movimiento); // Registrar movimiento
 	    			if(piezaComida != null) {
 	    				System.out.println("Las negras se comen a " + piezaComida.getNombre());
+	    				String comida = userN.getNombre() + " se come a " + piezaComida.getNombre() + "\n";
+                        escribirEnHistorial(fileOutputN, comida); // Registrar comida
 	    			}
-	    			
-	    			//Almacenamos el nuevo movimiento en los ficheros nombreusuariobancas.txt y nombreusuationegras.txt
-	        		
-	    			//-- OJO--
-	    			//Será importante al escribir en el fichero, no borrar lo que ya está escrito, el fichero funcionará como una especie de log
-	    			//La estructura del contenido del fichero puede ser algo así como
-	    			
-	    			//nombreusuario.txt
-	    			//NUEVA PARTIDA nombreusuarionegras VS nombreusuarioblancas
-	    			//nombreusuarionegras Alfil (0,0) -> (1,2) 
-	    			//nombreusuarioblancas Peon (1,1) -> (2,2) 
-	    			
-	    			//para hacer el tema del fichero creo que tendremos que utilizar un fileoutputstream
     			}
     			
     			lado = !lado;
@@ -136,12 +163,18 @@ public class Sala implements Runnable{
     			
     			Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() - 10);
     			Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() + 10);
+    			
+    			escribirEnHistorial(fileOutputB, "FIN DE LA PARTIDA: " + userB.getNombre() + " GANA\n");
+                escribirEnHistorial(fileOutputN, "FIN DE LA PARTIDA: " + userN.getNombre() + " PIERDE\n");
     		}else {
     			oosN.writeBytes("GANA\n");
     			oosB.writeBytes("PIERDE\n");
     			
     			Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() + 10);
     			Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() - 10);
+    			
+    			escribirEnHistorial(fileOutputB, "FIN DE LA PARTIDA: " + userB.getNombre() + " PIERDE\n");
+                escribirEnHistorial(fileOutputN, "FIN DE LA PARTIDA: " + userN.getNombre() + " GANA\n");
     		}
     		
     		//DESCONECTAMOS
@@ -156,5 +189,4 @@ public class Sala implements Runnable{
 			e.printStackTrace();
 		}
 	}
-
 }

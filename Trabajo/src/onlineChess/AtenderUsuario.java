@@ -1,9 +1,14 @@
 package onlineChess;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AtenderUsuario implements Runnable {
 
@@ -139,15 +144,79 @@ public class AtenderUsuario implements Runnable {
 		}
 	}
 	
+//	static void mostrarHistorial(Socket s, Usuario user) {
+//		//a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado en alguna carpeta que ceemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y le manda todo el contenido al usuario que de lo descargara 
+//		//enviaremos el fichero en forma de bytes, necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
+//	}
 	static void mostrarHistorial(Socket s, Usuario user) {
-		//a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado en alguna carpeta que ceemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y le manda todo el contenido al usuario que de lo descargara 
-		//enviaremos el fichero en forma de bytes, necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
-	}
+        // Ruta del archivo del historial del usuario
+        String rutaHistorial = user.getNombre() + ".txt";  
+        
+        // Creamos un DataOutputStream para enviar datos al cliente
+        try (DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+             FileInputStream fis = new FileInputStream(rutaHistorial)) {
+
+            // Verificamos si el archivo existe
+            File archivoHistorial = new File(rutaHistorial);
+            if (!archivoHistorial.exists()) {
+                dos.writeUTF("El historial de partidas no existe.");
+                return;
+            }
+
+            // Enviamos un mensaje que indica que estamos enviando el archivo
+            dos.writeUTF("Inicio del historial de partidas: " + user.getNombre());
+
+            // Usamos un buffer para leer y enviar el archivo en bloques de bytes
+            byte[] buffer = new byte[1024];
+            int bytesLeidos;
+
+            // Leemos el archivo y enviamos los datos en bloques
+            while ((bytesLeidos = fis.read(buffer)) != -1) {
+                dos.write(buffer, 0, bytesLeidos);
+            }
+
+            // Finalizamos la transferencia
+            dos.flush();
+            System.out.println("Historial de partidas enviado a " + user.getNombre());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+                dos.writeUTF("Error al leer el historial de partidas.");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 	
 	static void listadoPuntuaciones(ObjectOutputStream oos, Usuario user) {
 		//a través del socket, le mandará un Map<String, Integer> al usuario con la información de todos los usuarios y sus puntuaciones
 		//OJO LE ENVIAREMOS UN OBJETO oos.writeObject(Map<String, Integer>);
-		
+        Map<String, Usuario> usuarios = Server.users;
+
+        Map<String, Integer> puntuaciones = new HashMap<>();
+        
+        // Llenamos el mapa de puntuaciones
+        for (Map.Entry<String, Usuario> usuario : usuarios.entrySet()) {
+            String nombreUsuario = usuario.getKey();
+            Usuario usuarioActual = usuario.getValue();
+            puntuaciones.put(nombreUsuario, usuarioActual.getPuntuacion());
+        }
+
+        try {
+        	oos.writeObject(puntuaciones);
+            oos.flush(); 
+
+            System.out.println("Puntuaciones enviadas al usuario " + user.getNombre());
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                oos.writeUTF("Error al enviar el listado de puntuaciones.");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
 	}
 
 }
