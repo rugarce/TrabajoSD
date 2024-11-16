@@ -154,7 +154,7 @@ public class AtenderUsuario implements Runnable {
         
         // Creamos un DataOutputStream para enviar datos al cliente
         try (DataOutputStream dos = new DataOutputStream(s.getOutputStream());
-             FileInputStream fis = new FileInputStream(rutaHistorial)) {
+             FileInputStream fis = new FileInputStream(rutaHistorial)) { 
 
             // Verificamos si el archivo existe
             File archivoHistorial = new File(rutaHistorial);
