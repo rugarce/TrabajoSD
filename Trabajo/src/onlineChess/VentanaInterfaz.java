@@ -7,6 +7,11 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
@@ -20,10 +25,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaInterfaz {
 
 	private JFrame frmAjedrez;
+	private Map<Posicion,JButton> casillas;
+	JPanel panelTablero;
+	private Board tablero;
 
 	/**
 	 * Launch the application.
@@ -46,6 +57,7 @@ public class VentanaInterfaz {
 	 * Create the application.
 	 */
 	public VentanaInterfaz(Board tablero) {
+		this.tablero = tablero;
 		initialize(tablero);
 	}
 	
@@ -107,6 +119,7 @@ public class VentanaInterfaz {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Board tablero) {
+		casillas = new HashMap<Posicion, JButton>();
 		frmAjedrez = new JFrame();
 		frmAjedrez.setTitle("Ajedrez");
 		frmAjedrez.setBounds(100, 100, 451, 428);
@@ -125,30 +138,120 @@ public class VentanaInterfaz {
 		JLabel lblColor = new JLabel("Fichas: ");
 		panelDatos.add(lblColor);
 		
-		JPanel panelTablero = new JPanel();
+		panelTablero = new JPanel();
 		panelTablero.setForeground(new Color(255, 255, 255));
 		frmAjedrez.getContentPane().add(panelTablero, BorderLayout.CENTER);
 		panelTablero.setLayout(new GridLayout(8,8));
 		
 		JButton btn;
-		Color clr;
-		Pieza pieza;
 		
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
 				btn = new JButton(""); // Creamos el botón para cada posición del tablero
-				if((i%2==0 && j%2==0) || (i%2!=0 && j%2!=0)) {
-					clr = new Color(255,255,255);
-				}else {
-					 clr = new Color(41,41,41);
+				
+				setColorCasilla(i,j,btn); // Le damos el color correspondiente a la casilla
+				
+				setPieza(i,j,btn); // Añadimos imagen y evento al botón (en caso de que sea necesario
+				panelTablero.add(btn); // Añadimos el botón al tablero
+				casillas.put(new Posicion(i,j), btn);	// Añadimos el botón al mapa (Posición, casilla)
 				}
-				btn.setBackground(clr);
-				pieza = tablero.getTablero(new Posicion(i,j)); // Obtenemos la pieza de la posición
-				if(pieza!=null) {
-					asignarImagen(pieza,btn); // Asignamos la imagen de la pieza
-				}
-				panelTablero.add(btn);
+		}
+	}
+	
+	public void actualizarTablero(Board tablero) {
+		this.tablero = tablero;
+		
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++) {
+				JButton btn = (JButton) panelTablero.getComponent(i*8+j);
+				
+				setColorCasilla(i,j,btn); // Le damos el color correspondiente a la casilla
+				
+				setPieza(i,j,btn); // Añadimos imagen y evento al botón (en caso de que sea necesario
 			}
+		}
+	}
+	
+	// CONTROLADORES EVENTOS MOVIMIENTOS
+	
+	public void comenzarMovimiento(JButton btn) {
+		
+		Pieza pieza = getPieza(btn); 
+		
+		// No hace falta comprobar si la pieza es nula (casilla sin pieza), porque solo se han creado eventos para las casillas con pieza
+		ArrayList<Posicion> posiciones = tablero.getMovimientosPosibles(pieza);
+		
+		if(posiciones.size() == 0) { // Si la pieza no puede hacer movimientos, finaliza el evento
+			return;
+		}
+		
+		for(JButton button: casillas.values()) { // Eliminamos los eventos existentes en el resto de casillas
+			for(ActionListener a : button.getActionListeners()) {
+				button.removeActionListener(a);
+			}
+			button.setBackground(new Color(245,0,0));
+		}
+		
+		for(Posicion pos: posiciones) {
+			casillas.get(getPosicion(pos)).setBackground(new Color(58,168,50));
+			casillas.get(getPosicion(pos)).addActionListener(new ActionListener() { // Añadimos un evento para cuando se haga clic en el botón
+				public void actionPerformed(ActionEvent e) {
+					finalizarMovimiento((JButton) e.getSource());
+				}
+			});
+		}
+	}
+	
+	public void finalizarMovimiento(JButton btn) {
+		// tablero.moverPieza()
+		// parar Reloj
+		actualizarTablero(tablero);
+	}
+	
+	/*
+	 * Para un botón dado, devuelve la pieza que se encuentre en dicha casilla, null si está vacío
+	 */
+	public Pieza getPieza(JButton btn) {
+		Posicion posicion = null;
+		for(Entry<Posicion, JButton> entrada: casillas.entrySet()) {
+			if(entrada.getValue().equals(btn)) {
+				posicion = entrada.getKey();
+				return tablero.getTablero((posicion));
+			}
+		}
+		return null;
+	}
+	
+	public Posicion getPosicion(Posicion posicion) {
+		for(Entry<Posicion, JButton> entrada: casillas.entrySet()) {
+			if(entrada.getKey().equals(posicion)) {
+				return entrada.getKey();
+			}
+		}
+		return null;
+	}
+	
+	// MÉTODOS AUXILIARES PINTAR TABLERO
+	
+	public void setColorCasilla(int i, int j, JButton btn) {
+		Color clr;
+		if((i%2==0 && j%2==0) || (i%2!=0 && j%2!=0)) {
+			clr = new Color(255,255,255);
+		}else {
+			 clr = new Color(41,41,41);
+		}
+		btn.setBackground(clr); // Le añadimos el color de casilla correspondiente
+	}
+	
+	public void setPieza(int i, int j, JButton btn) {
+		Pieza pieza = tablero.getTablero(new Posicion(i,j)); // Obtenemos la pieza de la posición
+		if(pieza!=null) {
+			asignarImagen(pieza,btn); // Asignamos la imagen de la pieza
+			btn.addActionListener(new ActionListener() { // Añadimos un evento para cuando se haga clic en el botón
+				public void actionPerformed(ActionEvent e) {
+					comenzarMovimiento((JButton) e.getSource());
+				}
+			});
 		}
 	}
 
