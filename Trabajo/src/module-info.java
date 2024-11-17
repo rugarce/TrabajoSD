@@ -6,4 +6,5 @@
  *
  */
 module OnlineChess {
+	requires java.desktop;
 }
