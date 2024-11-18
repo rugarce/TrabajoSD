@@ -190,7 +190,7 @@ public class VentanaInterfaz {
 			for(ActionListener a : button.getActionListeners()) {
 				button.removeActionListener(a);
 			}
-			button.setBackground(new Color(245,0,0));
+			button.setBackground(new Color(245,0,0)); // Ponemos el color rojo en todas las casillas
 		}
 		
 		for(Posicion pos: posiciones) {
@@ -206,7 +206,16 @@ public class VentanaInterfaz {
 	public void finalizarMovimiento(JButton btn) {
 		tablero.moverPieza(piezaEnMovimiento,getPosicionDeBoton(btn));
 		// parar Reloj
-		actualizarTablero(tablero);
+		
+		piezaEnMovimiento = null;
+		
+		for(JButton button: casillas.values()) { // Eliminamos los eventos existentes en las casillas
+			for(ActionListener a : button.getActionListeners()) {
+				button.removeActionListener(a);
+			}
+		}
+		
+		actualizarTablero(tablero); // actualizamos el tablero
 	}
 	
 	/*
