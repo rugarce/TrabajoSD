@@ -35,6 +35,7 @@ public class VentanaInterfaz {
 	private Map<Posicion,JButton> casillas;
 	JPanel panelTablero;
 	private Board tablero;
+	Pieza piezaEnMovimiento = null;
 
 	/**
 	 * Launch the application.
@@ -159,15 +160,15 @@ public class VentanaInterfaz {
 	}
 	
 	public void actualizarTablero(Board tablero) {
-		this.tablero = tablero;
+		this.tablero = tablero; // Actualizamos el tablero de la partida
 		
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
-				JButton btn = (JButton) panelTablero.getComponent(i*8+j);
+				JButton btn = (JButton) panelTablero.getComponent(i*8+j); // Obtenemos el botónd de la posición en la que estamos
 				
 				setColorCasilla(i,j,btn); // Le damos el color correspondiente a la casilla
 				
-				setPieza(i,j,btn); // Añadimos imagen y evento al botón (en caso de que sea necesario
+				setPieza(i,j,btn); // Añadimos imagen y evento al botón (en caso de que sea necesario)
 			}
 		}
 	}
@@ -176,10 +177,10 @@ public class VentanaInterfaz {
 	
 	public void comenzarMovimiento(JButton btn) {
 		
-		Pieza pieza = getPieza(btn); 
+		piezaEnMovimiento = getPieza(btn); 
 		
 		// No hace falta comprobar si la pieza es nula (casilla sin pieza), porque solo se han creado eventos para las casillas con pieza
-		ArrayList<Posicion> posiciones = tablero.getMovimientosPosibles(pieza);
+		ArrayList<Posicion> posiciones = tablero.getMovimientosPosibles(piezaEnMovimiento);
 		
 		if(posiciones.size() == 0) { // Si la pieza no puede hacer movimientos, finaliza el evento
 			return;
@@ -203,7 +204,7 @@ public class VentanaInterfaz {
 	}
 	
 	public void finalizarMovimiento(JButton btn) {
-		// tablero.moverPieza()
+		tablero.moverPieza(piezaEnMovimiento,getPosicionDeBoton(btn));
 		// parar Reloj
 		actualizarTablero(tablero);
 	}
@@ -217,6 +218,18 @@ public class VentanaInterfaz {
 			if(entrada.getValue().equals(btn)) {
 				posicion = entrada.getKey();
 				return tablero.getTablero((posicion));
+			}
+		}
+		return null;
+	}
+	
+	/*
+	 * Para un botón dado, devuelve la posición en el mapa de casillas
+	 */
+	public Posicion getPosicionDeBoton(JButton btn) {
+		for(Entry<Posicion, JButton> entrada: casillas.entrySet()) {
+			if(entrada.getValue().equals(btn)) {
+				return entrada.getKey();
 			}
 		}
 		return null;
@@ -245,13 +258,15 @@ public class VentanaInterfaz {
 	
 	public void setPieza(int i, int j, JButton btn) {
 		Pieza pieza = tablero.getTablero(new Posicion(i,j)); // Obtenemos la pieza de la posición
-		if(pieza!=null) {
+		if(pieza!=null) { // Comprueba que haya pieza
 			asignarImagen(pieza,btn); // Asignamos la imagen de la pieza
 			btn.addActionListener(new ActionListener() { // Añadimos un evento para cuando se haga clic en el botón
 				public void actionPerformed(ActionEvent e) {
 					comenzarMovimiento((JButton) e.getSource());
 				}
 			});
+		}else {
+			btn.setIcon(null); // Si no hay pieza en esa posición, la imagen debe ser nula
 		}
 	}
 
