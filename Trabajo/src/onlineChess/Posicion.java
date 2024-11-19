@@ -1,6 +1,8 @@
 package onlineChess;
 
-public class Posicion{
+import java.io.Serializable;
+
+public class Posicion implements Serializable{
 	private int fila;
     private int columna;
 
@@ -19,5 +21,9 @@ public class Posicion{
     
     public boolean equals(Posicion posicion) {
     	return (this.fila == posicion.fila() && this.columna == posicion.columna());
+    }
+    
+    public String toString() {
+    	return "("+fila() + ", " + columna + ")";
     }
 }

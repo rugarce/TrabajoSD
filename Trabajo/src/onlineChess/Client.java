@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Client {
@@ -18,8 +19,8 @@ public class Client {
 		try {
 			s = new Socket("localhost", 55555);
 
-			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
+			oos = new ObjectOutputStream(s.getOutputStream());
 			
 			System.out.println("Ingrese su nombre de usuario:");
 			String username = scanner.nextLine();
@@ -85,40 +86,67 @@ public class Client {
 		System.out.println("-OBTENER HISTORIAL");
 		System.out.println("-LISTADO PUNTUACIONES");
 		System.out.println("-DESCONECTAR");
-		return scanner.nextLine();
+		//return scanner.nextLine();
+		return "UNIRME A PARTIDA";
 	}
 	
 	static void play(ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException {
+		System.out.println("Conectandose a sala...");
+		
 		//AQUI EL USUARIO SE QUEDA A LA ESPERA AL MENSAJE DE CONFIRMACIÓN DE INICIO DE PARTIDA
 		String roomResponse = ois.readLine(); 
 		
 		if(roomResponse.equals("START")) {
+			oos.writeBytes("OK\n");
+			oos.flush();
+			
+			System.out.println("Comienza la partida");
+			
 			//LEEMOS EL LADO DEL QUE JUGAREMOS
 			Boolean lado = ois.readBoolean();
+			if(lado) {
+				System.out.println("Su lado son las blancas");
+			}else {
+				System.out.println("Su lado son las negras");
+			}
 			
 			//COMIENZA LA PARTIDA
 			
 			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
 			String resultado = null;
-			
-			while((resultado = ois.readLine()) == "CONTINUA") {
-				Board tablero = (Board) ois.readObject();
-				
-				/*AQUI LA INTERFAZ MUESTRA EL TABLERO, LAS POSICIONES DE TODAS LAS FICHAS*/
-				/*MEDIANTE LOS METODOS DE tablero.getPiezas() y tablero.getMovimientosPosibles() MOSTRAMOS AL USUARIO LOS BOTONES DE LOS MOVIMIENTOS QUE PUEDE HACER*/
-				/*UNA VEZ PULSADOS RECIBIMOS UN OBJETO Posicion FROM (posicion que queremos mover) Y OTRO OBJETO Posicion TO QUE INDICA A DONDE QUEREMOS MOVER*/
-				boolean continuar = true;
-				Posicion from = null;
-				Posicion to = null;
-				
-				if(continuar) {
-					oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
-					oos.writeObject(from);
-					oos.writeObject(to);
-				}else {
-					oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
+			while((resultado = ois.readLine()) != null) {
+				if(resultado.equals("CONTINUA")) {
+					System.out.println("Es su turno");
+					Board tablero = (Board) ois.readObject();
+					
+					ArrayList<Pieza> piezas = tablero.getPiezas(lado);
+					ArrayList<Posicion> posiciones = tablero.getMovimientosPosibles(piezas.get(8));
+					
+					/*AQUI LA INTERFAZ MUESTRA EL TABLERO, LAS POSICIONES DE TODAS LAS FICHAS*/
+					/*MEDIANTE LOS METODOS DE tablero.getPiezas() y tablero.getMovimientosPosibles() MOSTRAMOS AL USUARIO LOS BOTONES DE LOS MOVIMIENTOS QUE PUEDE HACER*/
+					/*UNA VEZ PULSADOS RECIBIMOS UN OBJETO Posicion FROM (posicion que queremos mover) Y OTRO OBJETO Posicion TO QUE INDICA A DONDE QUEREMOS MOVER*/
+					
+					System.out.println(tablero.toString());
+					
+					for(int i = 0; i < piezas.size(); i++) {
+						System.out.println(piezas.get(i).getNombre() + " " + piezas.get(i).getPosicion().toString());
+					}
+					
+					boolean continuar = true;
+					Posicion from = piezas.get(8).getPosicion();
+					Posicion to = posiciones.get(0);
+					
+					System.out.println("Movido " + piezas.get(8).getNombre() + " de " + from.toString() + " a " + to.toString());
+					
+					if(continuar) {
+						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
+						oos.writeObject(from);
+						oos.writeObject(to);
+					}else {
+						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
+					}
+					oos.flush();
 				}
-				oos.flush();
 			}
 			
 			if(resultado.equals("PIERDE") || resultado.equals("GANA")) {

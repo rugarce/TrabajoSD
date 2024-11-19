@@ -79,14 +79,17 @@ public class AtenderUsuario implements Runnable {
 							Server.waitingSalas.remove(0);
 							Server.waitingSalasThreads.remove(0);
 
-							sala.unirseNegras(s, user);
+							//sala.unirseNegras(s, user);
+							sala.unirseNegras(user, ois, oos);
+							
 							//NOS UNIMOS AL HILO INICIADO Y EMPIEZA LA PARTIDA
 							
 							t.join();
 							//LA PARTIDA HA ACABADO
 						}else {
 							//si no hay salas esperando se mete al usuario en una a la espera de emparejarse
-							sala = new Sala(s, user);
+							//sala = new Sala(s, user);
+							sala = new Sala(user, ois, oos);
 							t = new Thread(sala);
 							
 							Server.waitingSalas.add(sala);

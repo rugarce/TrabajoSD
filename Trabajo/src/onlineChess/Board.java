@@ -57,10 +57,9 @@ public class Board implements Serializable {
 				} else {
 					linea += "  " + "|";
 				}
-
-				tablero += linea + "\n";
-				tablero += spacer + "\n";
 			}
+			tablero += linea + "\n";
+			tablero += spacer + "\n";
 		}
 
 		return tablero;

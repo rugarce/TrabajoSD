@@ -9,8 +9,14 @@ import java.util.concurrent.CountDownLatch;
 
 public class Sala implements Runnable{
 
-	private Socket socketUserB; //socket del ususario de las piezas blancas
-	private Socket socketUserN; //socket del ususario de las piezas negras
+	//private Socket socketUserB; //socket del ususario de las piezas blancas
+	//private Socket socketUserN; //socket del ususario de las piezas negras
+	
+	ObjectInputStream oisB = null;
+	ObjectInputStream oisN = null;
+	
+	ObjectOutputStream oosB = null;
+	ObjectOutputStream oosN = null;
 	
 	private Usuario userB;
 	private Usuario userN;
@@ -24,9 +30,11 @@ public class Sala implements Runnable{
     private FileOutputStream fileOutputN;
 	
 	//el primer usuario en entrar a la sala maneja las blancas
-	Sala(Socket socketUserB, Usuario userB){
-		this.socketUserB = socketUserB;
-		this.userB = userB;
+	Sala(Usuario user, ObjectInputStream ois, ObjectOutputStream oos){
+		//this.socketUserB = socketUserB;
+		this.oisB = ois;
+		this.oosB = oos;
+		this.userB = user;
 		
 		this.board = new Board();
 		
@@ -38,9 +46,10 @@ public class Sala implements Runnable{
         }
 	}
 	
-	public synchronized  void unirseNegras(Socket socketUserN, Usuario userN) {
-		this.socketUserN = socketUserN;
-		this.userN = userN;
+	public synchronized  void unirseNegras(Usuario user, ObjectInputStream ois, ObjectOutputStream oos) {
+		this.oisN = ois;
+		this.oosN = oos;
+		this.userN = user;
 		
 		// Crear archivo de historial para el usuario de las negras
         try {
@@ -65,29 +74,35 @@ public class Sala implements Runnable{
 	public void run() {
 		System.out.println("SALA INCIADA, A LA ESPERA DE LLENARSE PARA EMPEZAR");
 		
-		ObjectInputStream oisB = null;
+		/*ObjectInputStream oisB = null;
 		ObjectInputStream oisN = null;
 		
 		ObjectOutputStream oosB = null;
-		ObjectOutputStream oosN = null;
+		ObjectOutputStream oosN = null;*/
 		
 		try {
             latch.await(); // Espera hasta que el contador sea cero
             System.out.println("Ambos usuarios están presentes. Comienza la partida.");
-            
-            oisB = new ObjectInputStream(socketUserB.getInputStream());
-    		oisN = new ObjectInputStream(socketUserN.getInputStream());
+
+    		//oosB = new ObjectOutputStream(socketUserB.getOutputStream());
+    		//oosN = new ObjectOutputStream(socketUserN.getOutputStream());
     		
-    		oosB = new ObjectOutputStream(socketUserB.getOutputStream());
-    		oosN = new ObjectOutputStream(socketUserB.getOutputStream());
-            
     		//les indicamos a los usuarios que la partida empieza
     		oosB.writeBytes("START\n");
     		oosN.writeBytes("START\n");
+
+    		oosB.flush();
+    		oosN.flush();
+    		
+            //oisB = new ObjectInputStream(socketUserB.getInputStream());
+    		//oisN = new ObjectInputStream(socketUserN.getInputStream());
+    		
+    		System.out.println("Respuesta Acknowledge de las blancas:" + oisB.readLine());
+    		System.out.println("Respuesta Acknowledge de las negras:" + oisN.readLine());
     		
     		//les indicamos a cada usuario de que lado jugaran
-    		oosB.writeBoolean(true);
-    		oosN.writeBoolean(false);
+    		oosB.writeBoolean((Boolean)true);
+    		oosN.writeBoolean((Boolean)false);
     		
     		oosB.flush();
     		oosN.flush();
