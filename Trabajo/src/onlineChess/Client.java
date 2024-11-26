@@ -55,7 +55,7 @@ public class Client {
 			
 			String opcion = getOpcion(scanner); // Nos unimos a la partida automáticamente
 
-			while (opcion != "DESCONECTAR") {
+			while (!opcion.equals("DESCONECTAR")) {
 				switch (opcion) {
 				case "UNIRME A PARTIDA":
 					oos.writeBytes(opcion+"\n");
@@ -136,11 +136,15 @@ public class Client {
 					
 					// Leemos el tablero que proviene de la sala				
 					Board tablero = (Board) ois.readObject();
+					System.out.println("recibido tablero");
 					
 					interfaz.recibirActualizacionTablero(tablero);
+					System.out.println("tablero actualizado");
 					
 					// Obtenemos el movimiento desde la interfaz
 					obtenerMovimiento();
+
+					System.out.println("movimiento obtenido");
 					
 					boolean continuar = !interfaz.getDesconexion();
 					
@@ -149,18 +153,23 @@ public class Client {
 					Posicion to = interfaz.getDestino();
 					
 					if(continuar) {
+						System.out.println("CONTINUAMOS");
 						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 						oos.writeObject(from);
 						oos.reset();
 						oos.writeObject(to);
 						oos.reset();
 						
+						System.out.println("Enviado al servidor movimiento de " + from.toString() + " a " + to.toString());
+						
 						// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
-						interfaz.setPosiciones(null, null);
 					}else {
+						System.out.println("DESCONECTAMOS");
 						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 					}
 					oos.flush();
+
+					interfaz.setPosiciones(null, null);
 				}
 			}
 			

@@ -5,3 +5,16 @@ NUEVA PARTIDA Alonso VS Javi
 NUEVA PARTIDA Alonso VS Javi
 NUEVA PARTIDA Alonso VS Javi
 Alonso Caballo (0, 1) -> (2, 1)
+NUEVA PARTIDA Alonso VS Javi
+Alonso Peon (6, 2) -> (4, 2)
+NUEVA PARTIDA Alonso VS Javi
+Alonso Peon (6, 2) -> (5, 2)
+NUEVA PARTIDA Alonso VS Jorge
+Alonso Peon (6, 4) -> (5, 4)
+NUEVA PARTIDA Alonso VS Javi
+Alonso Peon (6, 4) -> (5, 4)
+NUEVA PARTIDA ALONSO VS JAVI
+ALONSO Peon (6, 1) -> (4, 1)
+NUEVA PARTIDA Alonso VS Del rincon
+NUEVA PARTIDA Alonso VS Javi
+Alonso Peon (6, 6) -> (5, 6)

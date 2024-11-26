@@ -115,6 +115,8 @@ public class Sala implements Runnable{
     		
     		while(board.quienGana() == null) {
     			if(lado) {
+    				System.out.println("Turno blancas");
+    				
     				oosB.writeBytes("CONTINUA\n");
     				
     				//OJO enviamos el tablero solo para que lo lea, solo nos interesa la posición que nos devuelve
@@ -123,7 +125,8 @@ public class Sala implements Runnable{
 	    			oosB.flush();
 	    			
 	    			String action = oisB.readLine();
-	    			if(action == "DESCONECTAR") {
+	    			System.out.println("Leido "+action);
+	    			if(action.equals("DESCONECTAR")) {
 	    				System.out.println("Las blancas solicitan desconectarse");
 	    				//AQUI GESTIONAMOS LA DESCONEXION
 	    			}
@@ -143,6 +146,8 @@ public class Sala implements Runnable{
                         escribirEnHistorial(fileOutputB, comida); // Registrar comida
 	    			}
     			}else {
+    				System.out.println("Turno negras");
+    				
     				oosN.writeBytes("CONTINUA\n");
     				
     				oosN.writeObject(board);
@@ -150,9 +155,12 @@ public class Sala implements Runnable{
 	    			oosN.flush();
 	    			
 	    			String action = oisN.readLine();
-	    			if(action == "DESCONECTAR") {
+	    			System.out.println("Leido "+action);
+	    			if(action.equals("DESCONECTAR")) {
 	    				System.out.println("Las negras solicitan desconectarse");
 	    				//AQUI GESTIONAMOS LA DESCONEXION
+	    			}else {
+	    				System.out.println("Las negras solicitan continuar");
 	    			}
 	    		
 	    			Posicion from = (Posicion) oisN.readObject();

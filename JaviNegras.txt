@@ -4,3 +4,13 @@ NUEVA PARTIDA Alonso VS Javi
 NUEVA PARTIDA Alnoso VS Javi
 NUEVA PARTIDA Alonso VS Javi
 Javi Torre (0, 0) -> (2, 0)
+NUEVA PARTIDA Alonso VS Javi
+Javi Peon (1, 3) -> (3, 3)
+NUEVA PARTIDA Alonso VS Javi
+Javi Peon (1, 7) -> (2, 7)
+NUEVA PARTIDA Alonso VS Javi
+Javi Peon (1, 4) -> (2, 4)
+NUEVA PARTIDA ALONSO VS JAVI
+JAVI Peon (1, 5) -> (2, 5)
+NUEVA PARTIDA Alons VS Javi
+NUEVA PARTIDA Alonso VS Javi

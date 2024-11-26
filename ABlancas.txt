@@ -1,2 +1,10 @@
 NUEVA PARTIDA A VS B
 A Peon (1, 1) -> (2, 1)
+NUEVA PARTIDA A VS B
+A Peon (6, 4) -> (5, 4)
+NUEVA PARTIDA a VS b
+a Peon (6, 5) -> (4, 5)
+NUEVA PARTIDA a VS b
+a Peon (6, 2) -> (5, 2)
+NUEVA PARTIDA a VS b
+a Peon (6, 6) -> (5, 6)
