@@ -15,11 +15,8 @@ public class Client {
 	
 	private static final Object lock = new Object();
 	
-	private static Posicion movimientoOrigen;
-	private static Posicion movimientoDestino;
-	
-	public Client(Socket socket) { // Creamos un cliente asociado a la interfaz
-		this.interfaz = new Interfaz(s);
+	public Client() { // Creamos un cliente asociado a la interfaz
+		this.interfaz = new Interfaz();
 	}
 	
 	public static void main(String[] args) {
@@ -31,7 +28,7 @@ public class Client {
 		try {
 			s = new Socket("localhost", 55555);
 			
-			Client cliente = new Client(s); // Creamos el cliente asociandolo a una interfaz y un socket
+			Client cliente = new Client(); // Creamos el cliente asociandolo a una interfaz y un socket
 			
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
@@ -137,16 +134,19 @@ public class Client {
 					// Leemos el tablero que proviene de la sala				
 					Board tablero = (Board) ois.readObject();
 					
-					interfaz.recibirActualizacionTablero();
+					interfaz.recibirActualizacionTablero(tablero);
 					
 					// Obtenemos el movimiento desde la interfaz
 					obtenerMovimiento();
 					
 					boolean continuar = true;
 					
-					// Guardamos los movimientos que hemos hecho
-					Posicion from = movimientoOrigen;
-					Posicion to = movimientoDestino;
+					// GUARDAMOS LOS MOVIMIENTOS HECHOS EN LA INTERFAZ
+					Posicion from = interfaz.getOrigen();
+					Posicion to = interfaz.getDestino();
+					
+					// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
+					interfaz.setPosiciones(null, null);
 					
 					if(continuar) {
 						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
@@ -192,9 +192,9 @@ public class Client {
 	// Método que la interfaz debe invocar para enviar un movimiento
 	public static void enviarMovimientoDesdeInterfaz(Posicion origen, Posicion destino) {
 	    synchronized (lock) {
-	        // Actualiza las posiciones
-	        movimientoOrigen = origen;
-	        movimientoDestino = destino;
+	    	
+	        // ACTUALIZA POSICIONES
+	        interfaz.setPosiciones(origen, destino);
 
 	        // Notifica al cliente que hay un movimiento disponible
 	        lock.notify();

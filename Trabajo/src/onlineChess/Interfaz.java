@@ -17,10 +17,6 @@ public class Interfaz extends JFrame {
     private JButton[][] botonesTablero;  // Botones del tablero para representar las casillas
     private JLabel labelTurno;  // Muestra quién está jugando
     
-    private Socket socket;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
-    
     private Board board;  // El tablero de ajedrez
     
     private boolean esMiTurno = false;  // Para saber si es el turno del jugador
@@ -29,16 +25,10 @@ public class Interfaz extends JFrame {
     
     private Posicion posicionSeleccionada = null;  // Almacena la pieza seleccionada
     
+    private Posicion movimientoOrigen;
+	private Posicion movimientoDestino;
 
-    public Interfaz(Socket socket) {
-        this.socket = socket;
-        
-        try {
-            ois = new ObjectInputStream(socket.getInputStream());
-            oos = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Interfaz() {        
 
         setTitle("Ajedrez en Línea");
         setSize(500, 500);
@@ -144,27 +134,31 @@ public class Interfaz extends JFrame {
     	// Enviamos el movimiento al cliente
     	Client.enviarMovimientoDesdeInterfaz(origen,destino);
 		
-		// Esperamos la actualización del tablero desde el servidor
-		
-		recibirActualizacionTablero();
+		// EL CLIENTE ACTUALIZA LA INTERFAZ 
     }
 
     // Método para recibir la actualización del tablero desde el servidor
-    public void recibirActualizacionTablero() {
-        try {
-        	// LECTURA DEL TABLERO DE LA SALA
-            Board nuevoTablero = (Board) ois.readObject();
-            
-            // ACTUALIZACIÓN DEL TABLERO (INTERNO Y GRÁFICO)
-            actualizarTablero(nuevoTablero);
-            
-            // CAMBIO DE TURNO
-            esMiTurno = !esMiTurno;
-            
-            labelTurno.setText(esMiTurno ? "Es tu turno" : "Es el turno del oponente");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void recibirActualizacionTablero(Board tablero) {
+        // ACTUALIZACIÓN DEL TABLERO (INTERNO Y GRÁFICO)
+		actualizarTablero(tablero);
+		
+		// CAMBIO DE TURNO
+		esMiTurno = !esMiTurno;
+		
+		labelTurno.setText(esMiTurno ? "Es tu turno" : "Es el turno del oponente");
+    }
+    
+    public Posicion getOrigen() {
+    	return this.movimientoOrigen;
+    }
+    
+    public Posicion getDestino() {
+    	return this.movimientoDestino;
+    }
+    
+    public void setPosiciones(Posicion origen, Posicion destino) {
+    	this.movimientoOrigen = origen;
+    	this.movimientoDestino = destino;
     }
 
     // Método para mostrar el mensaje de fin de partida
