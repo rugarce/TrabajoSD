@@ -111,7 +111,7 @@ public class Sala implements Runnable{
             escribirEnHistorial(fileOutputB, "NUEVA PARTIDA " + userB.getNombre() + " VS " + userN.getNombre() + "\n");
             escribirEnHistorial(fileOutputN, "NUEVA PARTIDA " + userB.getNombre() + " VS " + userN.getNombre() + "\n");
     		
-    		boolean lado = false;
+    		boolean lado = true;
     		
     		while(board.quienGana() == null) {
     			if(lado) {
