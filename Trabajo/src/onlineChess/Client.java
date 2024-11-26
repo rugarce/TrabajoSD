@@ -6,19 +6,33 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 
 public class Client {
+	
+	private static Socket s = null;
+	private static Interfaz interfaz = null;
+	
+	private static final Object lock = new Object();
+	
+	private static Posicion movimientoOrigen;
+	private static Posicion movimientoDestino;
+	
+	public Client(Socket socket) { // Creamos un cliente asociado a la interfaz
+		this.interfaz = new Interfaz(s);
+	}
+	
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		
-		Socket s = null;
 		
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
 		
 		try {
 			s = new Socket("localhost", 55555);
-
+			
+			Client cliente = new Client(s); // Creamos el cliente asociandolo a una interfaz y un socket
+			
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
 			
@@ -42,8 +56,7 @@ public class Client {
 				}
 			}
 			
-
-			String opcion = getOpcion(scanner);
+			String opcion = getOpcion(scanner); // Nos unimos a la partida automáticamente
 
 			while (opcion != "DESCONECTAR") {
 				switch (opcion) {
@@ -110,6 +123,9 @@ public class Client {
 				System.out.println("Su lado son las negras");
 			}
 			
+			// Asignamos el lado que nos toca jugar a la interfaz
+			interfaz.asignarLado(lado);
+			
 			//COMIENZA LA PARTIDA
 			
 			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
@@ -117,26 +133,20 @@ public class Client {
 			while((resultado = ois.readLine()) != null) {
 				if(resultado.equals("CONTINUA")) {
 					System.out.println("Es su turno");
+					
+					// Leemos el tablero que proviene de la sala				
 					Board tablero = (Board) ois.readObject();
 					
-					ArrayList<Pieza> piezas = tablero.getPiezas(lado);
-					ArrayList<Posicion> posiciones = tablero.getMovimientosPosibles(piezas.get(8));
+					interfaz.recibirActualizacionTablero();
 					
-					/*AQUI LA INTERFAZ MUESTRA EL TABLERO, LAS POSICIONES DE TODAS LAS FICHAS*/
-					/*MEDIANTE LOS METODOS DE tablero.getPiezas() y tablero.getMovimientosPosibles() MOSTRAMOS AL USUARIO LOS BOTONES DE LOS MOVIMIENTOS QUE PUEDE HACER*/
-					/*UNA VEZ PULSADOS RECIBIMOS UN OBJETO Posicion FROM (posicion que queremos mover) Y OTRO OBJETO Posicion TO QUE INDICA A DONDE QUEREMOS MOVER*/
-					
-					System.out.println(tablero.toString());
-					
-					for(int i = 0; i < piezas.size(); i++) {
-						System.out.println(piezas.get(i).getNombre() + " " + piezas.get(i).getPosicion().toString());
-					}
+					// Obtenemos el movimiento desde la interfaz
+					obtenerMovimiento();
 					
 					boolean continuar = true;
-					Posicion from = piezas.get(8).getPosicion();
-					Posicion to = posiciones.get(0);
 					
-					System.out.println("Movido " + piezas.get(8).getNombre() + " de " + from.toString() + " a " + to.toString());
+					// Guardamos los movimientos que hemos hecho
+					Posicion from = movimientoOrigen;
+					Posicion to = movimientoDestino;
 					
 					if(continuar) {
 						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
@@ -164,5 +174,36 @@ public class Client {
 		}else {
 			System.out.println("ERROR:Error en la conexión a la sala");
 		}
+	}
+	
+	// Método para esperar el movimiento desde la interfaz
+	private static void esperarMovimientoDesdeInterfaz() {
+	    synchronized (lock) {
+	        try {
+	            // Bloquea el cliente hasta que la interfaz notifique un movimiento
+	            lock.wait();
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            System.err.println("La espera fue interrumpida.");
+	        }
+	    }
+	}
+
+	// Método que la interfaz debe invocar para enviar un movimiento
+	public static void enviarMovimientoDesdeInterfaz(Posicion origen, Posicion destino) {
+	    synchronized (lock) {
+	        // Actualiza las posiciones
+	        movimientoOrigen = origen;
+	        movimientoDestino = destino;
+
+	        // Notifica al cliente que hay un movimiento disponible
+	        lock.notify();
+	    }
+	}
+
+	// Método para obtener el movimiento en jugar()
+	private static void obtenerMovimiento() {
+		
+	    esperarMovimientoDesdeInterfaz(); // Espera hasta que la interfaz notifique
 	}
 }

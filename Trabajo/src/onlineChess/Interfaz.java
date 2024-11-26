@@ -28,9 +28,11 @@ public class Interfaz extends JFrame {
     private boolean miLado;
     
     private Posicion piezaSeleccionada = null;  // Almacena la pieza seleccionada
+    
 
     public Interfaz(Socket socket) {
         this.socket = socket;
+        
         try {
             ois = new ObjectInputStream(socket.getInputStream());
             oos = new ObjectOutputStream(socket.getOutputStream());
@@ -138,16 +140,13 @@ public class Interfaz extends JFrame {
 
     // Método para enviar el movimiento de una pieza al servidor
     private void enviarMovimiento(Posicion origen, Posicion destino) {
-        try {
-            // Enviar al servidor el movimiento de la pieza
-            oos.writeObject(origen);
-            oos.writeObject(destino);
-            oos.flush();
-            // Esperamos la actualización del tablero desde el servidor
-            recibirActualizacionTablero();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
+    	// Enviamos el movimiento al cliente
+    	Client.enviarMovimientoDesdeInterfaz(origen,destino);
+		
+		// Esperamos la actualización del tablero desde el servidor
+		
+		recibirActualizacionTablero();
     }
 
     // Método para recibir la actualización del tablero desde el servidor
@@ -168,6 +167,11 @@ public class Interfaz extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje, "Fin de la partida", JOptionPane.INFORMATION_MESSAGE);
         // Cerrar la ventana
         System.exit(0);
+    }
+    
+    // Asignar el lado en el que jugamos
+    public void asignarLado(boolean lado) {
+    	this.miLado = lado;
     }
     
     // Método para asignar las imágenes

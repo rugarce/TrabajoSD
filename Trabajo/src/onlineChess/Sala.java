@@ -36,7 +36,7 @@ public class Sala implements Runnable{
 		this.oosB = oos;
 		this.userB = user;
 		
-		this.board = new Board();
+		this.board = new Board(); // Crea el tablero de la partida
 		
 		// Crear archivo de historial para el usuario de las blancas
 		try {
