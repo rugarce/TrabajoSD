@@ -141,7 +141,9 @@ public class Client {
 					if(continuar) {
 						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 						oos.writeObject(from);
+						oos.reset();
 						oos.writeObject(to);
+						oos.reset();
 					}else {
 						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 					}

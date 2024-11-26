@@ -119,6 +119,7 @@ public class Sala implements Runnable{
     				
     				//OJO enviamos el tablero solo para que lo lea, solo nos interesa la posición que nos devuelve
 	    			oosB.writeObject(board);
+	    			oosB.reset();
 	    			oosB.flush();
 	    			
 	    			String action = oisB.readLine();
@@ -145,6 +146,7 @@ public class Sala implements Runnable{
     				oosN.writeBytes("CONTINUA\n");
     				
     				oosN.writeObject(board);
+    				oosN.reset();
 	    			oosN.flush();
 	    			
 	    			String action = oisN.readLine();

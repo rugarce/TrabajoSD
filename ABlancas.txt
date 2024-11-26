@@ -1,0 +1,2 @@
+NUEVA PARTIDA A VS B
+A Peon (1, 1) -> (2, 1)

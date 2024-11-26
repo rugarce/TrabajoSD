@@ -34,18 +34,18 @@ public class AtenderUsuario implements Runnable {
 
 			System.out.println("Recibido el nombre de usuario "+username);
 			
-			if(Server.connectedUsers.contains(username)) {
+			if(existeUsuarioConectado(username)) {
 				oos.writeBytes("ERROR:usuario ya conectado\n");
 				oos.flush();
 				return;
 			}
 			
 			Usuario user = null;
-			if(!Server.users.contains(username)) {
+			if(!existeUsuario(username)) {
 				user = new Usuario(username, 0);
 				oos.writeBytes("OK:nuevo usuario registrado\n");
 			}else {
-				user = Server.users.get(username);
+				user = getUsuario(username);
 				oos.writeBytes("OK:usuario logeado con éxito\n");
 			}
 			oos.flush();
@@ -70,14 +70,14 @@ public class AtenderUsuario implements Runnable {
 						Thread t = null;	
 						if(Server.waitingSalas.size() != 0) {
 							//si hay salas con usuarios esperando a ser emparejados se mete al usuario en la sala creada más vieja
-							sala = Server.waitingSalas.get(0);
-							t = Server.waitingSalasThreads.get(0);
+							sala = getSalaEnEspera();
+							t = getHiloSalaEnEspera();
 
-							Server.runningSalas.add(sala);
-							Server.runningSalasThreads.add(t);
+							addSalaEnCurso(sala);
+							addHiloSalaEnCurso(t);
 							
-							Server.waitingSalas.remove(0);
-							Server.waitingSalasThreads.remove(0);
+							eliminarSalaEnEspera(sala);
+							eliminarHiloSalaEnEspera(t);
 
 							//sala.unirseNegras(s, user);
 							sala.unirseNegras(user, ois, oos);
@@ -92,8 +92,8 @@ public class AtenderUsuario implements Runnable {
 							sala = new Sala(user, ois, oos);
 							t = new Thread(sala);
 							
-							Server.waitingSalas.add(sala);
-							Server.waitingSalasThreads.add(t);
+							addSalaEspera(sala);
+							addHiloSalaEspera(t);
 
 							//INICIAMOS EL HILO
 							System.out.println("Iniciando sala...");
@@ -102,6 +102,9 @@ public class AtenderUsuario implements Runnable {
 							t.join();
 							System.out.println("Partida finalizada...");
 							//LA PARTIDA HA ACABADO
+							
+							eliminarSalaEnCurso(sala);
+							eliminarHiloSalaEnCurso(t);
 						}
 					break;
 					case("OBTENER HISTORIAL"):
@@ -209,6 +212,7 @@ public class AtenderUsuario implements Runnable {
 
         try {
         	oos.writeObject(puntuaciones);
+        	oos.reset();
             oos.flush(); 
 
             System.out.println("Puntuaciones enviadas al usuario " + user.getNombre());
@@ -222,4 +226,87 @@ public class AtenderUsuario implements Runnable {
         }
 	}
 
+	
+	//métodos synchronized de las salas en espera
+	static Sala getSalaEnEspera() {
+		synchronized(Server.waitingSalas) {
+			return Server.waitingSalas.get(0);
+		}
+	}
+	
+	static Thread getHiloSalaEnEspera() {
+		synchronized(Server.waitingSalasThreads) {
+			return Server.waitingSalasThreads.get(0);
+		}
+	}
+	
+	static void addSalaEspera(Sala sala) {
+		synchronized(Server.waitingSalas) {
+			Server.waitingSalas.add(sala);
+		}
+	}
+	
+	static void addHiloSalaEspera(Thread t) {
+		synchronized(Server.waitingSalasThreads) {
+			Server.waitingSalasThreads.add(t);
+		}
+	}
+	
+	static void eliminarSalaEnEspera(Sala sala) {
+		synchronized(Server.waitingSalas) {
+			Server.waitingSalas.remove(sala);
+		}
+	}
+	
+	static void eliminarHiloSalaEnEspera(Thread t) {
+		synchronized(Server.waitingSalasThreads) {
+			Server.waitingSalasThreads.remove(t);
+		}
+	}
+	
+	
+	
+	//métodos synchronized de las salas en curso
+	static void addSalaEnCurso(Sala sala) {
+		synchronized(Server.runningSalas) {
+			Server.runningSalas.add(sala);
+		}
+	}
+	
+	static void addHiloSalaEnCurso(Thread t) {
+		synchronized(Server.runningSalasThreads) {
+			Server.runningSalasThreads.add(t);
+		}
+	}
+	
+	static void eliminarSalaEnCurso(Sala sala) {
+		synchronized(Server.runningSalas) {
+			Server.runningSalas.remove(sala);
+		}
+	}
+	
+	static void eliminarHiloSalaEnCurso(Thread t) {
+		synchronized(Server.runningSalasThreads) {
+			Server.runningSalasThreads.remove(t);
+		}
+	}
+	
+	//métodos synchronized de los usuarios
+	static Boolean existeUsuarioConectado(String username) {
+		synchronized(Server.connectedUsers) {
+			return Server.connectedUsers.contains(username);
+		}
+	}
+	
+	static Boolean existeUsuario(String username) {
+		synchronized(Server.users) {
+			return Server.users.contains(username);
+		}
+	}
+	
+	static Usuario getUsuario(String username) {
+		synchronized(Server.users) {
+			return Server.users.get(username);
+		}
+	}
 }
