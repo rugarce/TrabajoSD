@@ -123,7 +123,7 @@ public class Client {
 				System.out.println("Su lado son las negras");
 			}
 			
-			// Asignamos el lado que nos toca jugar a la interfaz
+			// ASIGNAMOS EL LADO EN EL QUE JUGAREMOS A LA INTERFAZ
 			interfaz.asignarLado(lado);
 			
 			//COMIENZA LA PARTIDA

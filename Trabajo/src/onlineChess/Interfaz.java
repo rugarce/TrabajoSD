@@ -27,7 +27,7 @@ public class Interfaz extends JFrame {
     private String turno = "Blancas";  // Oponente alternará entre "Blancas" y "Negras"
     private boolean miLado;
     
-    private Posicion piezaSeleccionada = null;  // Almacena la pieza seleccionada
+    private Posicion posicionSeleccionada = null;  // Almacena la pieza seleccionada
     
 
     public Interfaz(Socket socket) {
@@ -101,18 +101,18 @@ public class Interfaz extends JFrame {
     private void moverPieza(int fila, int columna) {
         // Si es el turno del jugador, podemos hacer el movimiento
         if (esMiTurno) {
-            if (piezaSeleccionada == null) { // No había sido seleccionada previamente una pieza
+            if (posicionSeleccionada == null) { // No había sido seleccionada previamente una pieza
                 // Seleccionamos una pieza
-                piezaSeleccionada = new Posicion(fila, columna); // Guardamos la posición de la pieza
+                posicionSeleccionada = new Posicion(fila, columna); // Guardamos la posición de la pieza
                 
-                Pieza piezaEnMovimiento = board.getTablero(piezaSeleccionada); // Obtenemos la pieza seleccionada
+                Pieza piezaEnMovimiento = board.getTablero(posicionSeleccionada); // Obtenemos la pieza seleccionada
                 
                 if(piezaEnMovimiento != null && piezaEnMovimiento.getLado() == miLado) {
                 	
                 	ArrayList<Posicion> posiciones = board.getMovimientosPosibles(piezaEnMovimiento);
                 	
                 	if(posiciones.size() == 0) { // Si no se puede mover a ninguna posición, acabamos
-                		piezaSeleccionada = null; //No se puede hacer ningún movimiento
+                		posicionSeleccionada = null; //No se puede hacer ningún movimiento
                 		return;
                 	}
                 	
@@ -127,13 +127,13 @@ public class Interfaz extends JFrame {
                 	}
                 	
                 }else { // Si la pieza es nula (casilla vacía) o es del contrincante, no hacemos nada
-                	piezaSeleccionada = null; // Reseteamos la selección (no se puede hacer ningún movimiento con la casilla elegida)
+                	posicionSeleccionada = null; // Reseteamos la selección (no se puede hacer ningún movimiento con la casilla elegida)
                 }
             } else {
                 // Intentamos mover la pieza (previamente guardada en piezaSeleccionada)
                 Posicion destino = new Posicion(fila, columna);
-                enviarMovimiento(piezaSeleccionada, destino);
-                piezaSeleccionada = null;  // Reseteamos la selección
+                enviarMovimiento(posicionSeleccionada, destino);
+                posicionSeleccionada = null;  // Reseteamos la selección
             }
         }
     }
@@ -152,10 +152,15 @@ public class Interfaz extends JFrame {
     // Método para recibir la actualización del tablero desde el servidor
     public void recibirActualizacionTablero() {
         try {
+        	// LECTURA DEL TABLERO DE LA SALA
             Board nuevoTablero = (Board) ois.readObject();
+            
+            // ACTUALIZACIÓN DEL TABLERO (INTERNO Y GRÁFICO)
             actualizarTablero(nuevoTablero);
-            // Alternar el turno
+            
+            // CAMBIO DE TURNO
             esMiTurno = !esMiTurno;
+            
             labelTurno.setText(esMiTurno ? "Es tu turno" : "Es el turno del oponente");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
