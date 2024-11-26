@@ -123,6 +123,9 @@ public class Client {
 			// ASIGNAMOS EL LADO EN EL QUE JUGAREMOS A LA INTERFAZ
 			interfaz.asignarLado(lado);
 			
+			// ACTIVAMOS EL BOTÓN DE DESCONEXIÓN
+			interfaz.activarBotonDesconectar();
+			
 			//COMIENZA LA PARTIDA
 			
 			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
@@ -139,14 +142,11 @@ public class Client {
 					// Obtenemos el movimiento desde la interfaz
 					obtenerMovimiento();
 					
-					boolean continuar = true;
+					boolean continuar = !interfaz.getDesconexion();
 					
 					// GUARDAMOS LOS MOVIMIENTOS HECHOS EN LA INTERFAZ
 					Posicion from = interfaz.getOrigen();
 					Posicion to = interfaz.getDestino();
-					
-					// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
-					interfaz.setPosiciones(null, null);
 					
 					if(continuar) {
 						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
@@ -154,6 +154,9 @@ public class Client {
 						oos.reset();
 						oos.writeObject(to);
 						oos.reset();
+						
+						// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
+						interfaz.setPosiciones(null, null);
 					}else {
 						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 					}

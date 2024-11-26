@@ -27,6 +27,9 @@ public class Interfaz extends JFrame {
     
     private Posicion movimientoOrigen;
 	private Posicion movimientoDestino;
+	
+	private JButton btnDesconectar = null;
+	private boolean desconexion = false;
 
     public Interfaz() {        
 
@@ -64,10 +67,39 @@ public class Interfaz extends JFrame {
         labelTurno.setFont(new Font("Arial", Font.PLAIN, 16));
         labelTurno.setPreferredSize(new Dimension(500, 30));
         
-        add(panelTablero, BorderLayout.CENTER);
-        add(labelTurno, BorderLayout.SOUTH);
+        getContentPane().add(panelTablero, BorderLayout.CENTER);
+        getContentPane().add(labelTurno, BorderLayout.SOUTH);
+        
+        JPanel panelOpciones = new JPanel();
+        getContentPane().add(panelOpciones, BorderLayout.NORTH);
+        
+        btnDesconectar = new JButton("Desconectar");
+        btnDesconectar.setEnabled(false);
+        btnDesconectar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desconectarseDePartida();
+        	}
+        });
+        panelOpciones.add(btnDesconectar);
         
         setVisible(true);
+    }
+    
+    // ACTIVAR EL BOTÓN DE DESCONEXIÓN CUANDO SE EMPIEZA UNA PARTIDA
+    public void activarBotonDesconectar() {
+    	this.btnDesconectar.setEnabled(true);
+    }
+    
+    // CUANDO EL CLIENTE QUIERE DESCONECTARSE DE LA PARTIDA
+    public void desconectarseDePartida() {
+    	desconexion = true;
+    	
+    	// NOTIFICAMOS AL CLIENTE QUE SE QUEREMOS DESCONECTARNOS, ENVIANDO UN MOVIMIENTO NULO
+    	Client.enviarMovimientoDesdeInterfaz(null, null);
+    }
+    
+    public boolean getDesconexion() {
+    	return this.desconexion;
     }
 
     // Método para actualizar el tablero visualmente
