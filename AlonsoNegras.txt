@@ -1,0 +1,12 @@
+NUEVA PARTIDA Ruben VS Alonso
+Alonso Peon (1, 5) -> (3, 5)
+Alonso Peon (3, 5) -> (4, 4)
+Alonso se come a Peon
+Alonso Peon (1, 3) -> (2, 3)
+FIN DE LA PARTIDA: Alonso PIERDE
+NUEVA PARTIDA RUGARCE VS ALONSO
+ALONSO Peon (1, 5) -> (3, 5)
+ALONSO Peon (3, 5) -> (4, 4)
+ALONSO se come a Peon
+FIN DE LA PARTIDA: ALONSO PIERDE
+NUEVA PARTIDA RUGARCE VS ALONSO

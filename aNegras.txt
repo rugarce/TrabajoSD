@@ -1,0 +1,6 @@
+NUEVA PARTIDA r VS a
+NUEVA PARTIDA B VS A
+A Peon (1, 5) -> (3, 5)
+A Peon (3, 5) -> (4, 4)
+A se come a Peon
+FIN DE LA PARTIDA: A PIERDE

@@ -22,8 +22,6 @@ public class AtenderUsuario implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Inicio");
-
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
 
@@ -32,8 +30,6 @@ public class AtenderUsuario implements Runnable {
 			ois = new ObjectInputStream(s.getInputStream());
 
 			String username = ois.readLine();
-
-			System.out.println("Recibido el nombre de usuario " + username);
 
 			if (existeUsuarioConectado(username)) {
 				oos.writeBytes("ERROR:usuario ya conectado\n");
@@ -46,9 +42,11 @@ public class AtenderUsuario implements Runnable {
 				user = new Usuario(username, 0);
 				Server.users.put(username, user);
 				oos.writeBytes("OK:nuevo usuario registrado\n");
+				System.out.println(user + " registrado como nuevo usuario");
 			} else {
 				user = getUsuario(username);
 				oos.writeBytes("OK:usuario logeado con éxito\n");
+				System.out.println(user + " logeado en el sistema");
 			}
 			oos.flush();
 
@@ -58,15 +56,11 @@ public class AtenderUsuario implements Runnable {
 			 * PARTIDAS ETC
 			 */
 
-			String action = action = ois.readLine();
-
-			/*
-			* 
-			*/
+			String action = ois.readLine();
 
 			boolean waitingToFinish = false;
 
-			while (action != "DESCONECTAR" && !waitingToFinish) {
+			while (!action.equals("DESCONECTAR") && action != null && !waitingToFinish) {
 				switch (action) {
 				case ("UNIRME A PARTIDA"):
 					Sala sala = null;
@@ -162,12 +156,14 @@ public class AtenderUsuario implements Runnable {
 	static void mostrarHistorial(ObjectOutputStream oos, Usuario user) {
 		// Ruta del archivo del historial del usuario
 		String rutaHistorial = user.getNombre() + ".txt";
-
+		
+		BufferedReader br = null;
+		
 		// Creamos un DataOutputStream para enviar datos al cliente
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(rutaHistorial)))) {
-
-			// Verificamos si el archivo existe
+		try {
 			File archivoHistorial = new File(rutaHistorial);
+			
+			// Verificamos si el archivo existe
 			if (!archivoHistorial.exists()) {
 				// dos.writeUTF("El historial de partidas no existe.");
 				oos.writeBytes("NO EXISTE\n");
@@ -175,6 +171,8 @@ public class AtenderUsuario implements Runnable {
 				oos.flush();
 				return;
 			}
+			
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(rutaHistorial)));
 
 			oos.writeBytes("EXISTE\n");
 			oos.flush();
@@ -196,6 +194,15 @@ public class AtenderUsuario implements Runnable {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if(br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

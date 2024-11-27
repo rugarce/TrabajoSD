@@ -1,0 +1,2 @@
+NUEVA PARTIDA t VS j
+t Peon (6, 3) -> (4, 3)
