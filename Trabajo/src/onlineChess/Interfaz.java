@@ -154,8 +154,10 @@ public class Interfaz extends JFrame {
             } else {
                 // Intentamos mover la pieza (previamente guardada en piezaSeleccionada)
                 Posicion destino = new Posicion(fila, columna);
+                
                 enviarMovimiento(posicionSeleccionada, destino);
-                posicionSeleccionada = null;  // Reseteamos la selección
+                
+                posicionSeleccionada = null;  // Reseteamos la selección 
             }
         }
     }
@@ -166,16 +168,19 @@ public class Interfaz extends JFrame {
     	// Enviamos el movimiento al cliente
     	Client.enviarMovimientoDesdeInterfaz(origen,destino);
 		
-		// EL CLIENTE ACTUALIZA LA INTERFAZ 
+		// ACTUALIZAMOS TABLERO INTERNO DE INTERFAZ (Movemos la pieza)
+    	this.board.moverPieza(board.getTablero(posicionSeleccionada), destino);
+    	
+    	// EL CLIENTE ACTUALIZA LA INTERFAZ 
     }
 
     // Método para recibir la actualización del tablero desde el servidor
-    public void recibirActualizacionTablero(Board tablero) {
+    public void recibirActualizacionTablero(Board tablero, boolean turno) {
         // ACTUALIZACIÓN DEL TABLERO (INTERNO Y GRÁFICO)
 		actualizarTablero(tablero);
 		
 		// CAMBIO DE TURNO
-		esMiTurno = !esMiTurno;
+		esMiTurno = turno;
 		
 		labelTurno.setText(esMiTurno ? "Es tu turno" : "Es el turno del oponente");
     }
@@ -203,6 +208,10 @@ public class Interfaz extends JFrame {
     // Asignar el lado en el que jugamos
     public void asignarLado(boolean lado) {
     	this.miLado = lado;
+    }
+    
+    public Board getTablero() {
+    	return this.board;
     }
     
     // Método para asignar las imágenes

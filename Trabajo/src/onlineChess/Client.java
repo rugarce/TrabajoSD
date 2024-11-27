@@ -15,10 +15,6 @@ public class Client {
 	
 	private static final Object lock = new Object();
 	
-	public Client() { // Creamos un cliente asociado a la interfaz
-		this.interfaz = new Interfaz();
-	}
-	
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		
@@ -27,8 +23,6 @@ public class Client {
 		
 		try {
 			s = new Socket("localhost", 55555);
-			
-			Client cliente = new Client(); // Creamos el cliente asociandolo a una interfaz y un socket
 			
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
@@ -110,6 +104,9 @@ public class Client {
 			oos.writeBytes("OK\n");
 			oos.flush();
 			
+			// Creamos la interfaz del tablero
+			interfaz = new Interfaz();
+			
 			System.out.println("Comienza la partida");
 			
 			//LEEMOS EL LADO DEL QUE JUGAREMOS
@@ -126,6 +123,8 @@ public class Client {
 			// ACTIVAMOS EL BOTÓN DE DESCONEXIÓN
 			interfaz.activarBotonDesconectar();
 			
+			Board tablero = null;
+			
 			//COMIENZA LA PARTIDA
 			
 			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
@@ -135,10 +134,10 @@ public class Client {
 					System.out.println("Es su turno");
 					
 					// Leemos el tablero que proviene de la sala				
-					Board tablero = (Board) ois.readObject();
+					tablero = (Board) ois.readObject();
 					System.out.println("recibido tablero");
 					
-					interfaz.recibirActualizacionTablero(tablero);
+					interfaz.recibirActualizacionTablero(tablero, true);
 					System.out.println("tablero actualizado");
 					
 					// Obtenemos el movimiento desde la interfaz
@@ -170,6 +169,9 @@ public class Client {
 					oos.flush();
 
 					interfaz.setPosiciones(null, null);
+					
+					// Actualizamos el turno y repintamos
+					interfaz.recibirActualizacionTablero(interfaz.getTablero(), false);
 				}
 			}
 			
