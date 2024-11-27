@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
@@ -61,12 +62,35 @@ public class Client {
 				case "OBTENER HISTORIAL":
 					oos.writeBytes(opcion+"\n");
 					oos.flush();
+					
+					String estado = ois.readLine();
+					if(estado.equals("EXISTE")) {
+						System.out.println("RECIBIDO recibido existe" +estado);
+						
+						String linea = ois.readLine();
+			            // Leemos el archivo y enviamos los datos en bloques
+			            while (!linea.equals("FIN")) {
+			                System.out.println(linea);
+			                linea = ois.readLine();
+			            }
+					}
 					break;
 				case "LISTADO PUNTUACIONES":
 					oos.writeBytes(opcion+"\n");
 					oos.flush();
+					
+					System.out.println("------------RANKING------------");
+					Map<String, Integer> puntuaciones = (Map<String, Integer>) ois.readObject();
+					for (Map.Entry<String, Integer> m : puntuaciones.entrySet()) {
+			            System.out.println(m.getKey() + ": " + m.getValue());
+			        }
+					System.out.println("-------------------------------");
+
 					break;
 				}
+
+				opcion = getOpcion(scanner);
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,8 +114,8 @@ public class Client {
 		System.out.println("-OBTENER HISTORIAL");
 		System.out.println("-LISTADO PUNTUACIONES");
 		System.out.println("-DESCONECTAR");
-		//return scanner.nextLine();
-		return "UNIRME A PARTIDA";
+		return scanner.nextLine();
+		//return "UNIRME A PARTIDA";
 	}
 	
 	static void play(ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException {
@@ -130,6 +154,7 @@ public class Client {
 			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
 			String resultado = null;
 			while((resultado = ois.readLine()) != null) {
+				System.out.println("MENSAJE DEL SERVIDOR " + resultado);
 				if(resultado.equals("CONTINUA")) {
 					System.out.println("Es su turno");
 					
@@ -165,6 +190,8 @@ public class Client {
 					}else {
 						System.out.println("DESCONECTAMOS");
 						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
+						oos.flush();
+						break;
 					}
 					oos.flush();
 
@@ -172,7 +199,11 @@ public class Client {
 					
 					// Actualizamos el turno y repintamos
 					interfaz.recibirActualizacionTablero(interfaz.getTablero(), false);
+				}else {
+					break;
 				}
+				
+				System.out.println("LLEGA AQUI");
 			}
 			
 			if(resultado.equals("PIERDE") || resultado.equals("GANA")) {
@@ -185,6 +216,7 @@ public class Client {
 				}
 			}
 			
+			interfaz.dispose();
 		}else {
 			System.out.println("ERROR:Error en la conexión a la sala");
 		}

@@ -18,3 +18,5 @@ ALONSO Peon (6, 1) -> (4, 1)
 NUEVA PARTIDA Alonso VS Del rincon
 NUEVA PARTIDA Alonso VS Javi
 Alonso Peon (6, 6) -> (5, 6)
+NUEVA PARTIDA Alonso VS Javi
+Alonso Peon (6, 7) -> (5, 7)

@@ -6,3 +6,30 @@ NUEVA PARTIDA a VS b
 b Peon (1, 5) -> (3, 5)
 NUEVA PARTIDA a VS b
 NUEVA PARTIDA a VS b
+NUEVA PARTIDA a VS b
+b Peon (1, 2) -> (3, 2)
+b Peon (3, 2) -> (4, 2)
+b Peon (1, 3) -> (2, 4)
+b se come a Peon
+b Dama (4, 2) -> (7, 3)
+b se come a Dama
+NUEVA PARTIDA A VS B
+B Peon (1, 3) -> (3, 3)
+B Caballo (0, 6) -> (7, 1)
+B se come a Caballo
+NUEVA PARTIDA A VS B
+B Peon (1, 2) -> (2, 2)
+NUEVA PARTIDA A VS B
+B Peon (1, 3) -> (3, 3)
+B Peon (3, 3) -> (4, 3)
+B Alfil (0, 2) -> (3, 5)
+B se come a Peon
+NUEVA PARTIDA a VS b
+b Peon (1, 5) -> (3, 5)
+b Peon (3, 5) -> (4, 4)
+b se come a Peon
+FIN DE LA PARTIDA: b PIERDE
+NUEVA PARTIDA A VS B
+B Peon (1, 3) -> (3, 3)
+B Peon (1, 5) -> (3, 5)
+FIN DE LA PARTIDA: B PIERDE

@@ -14,3 +14,5 @@ NUEVA PARTIDA ALONSO VS JAVI
 JAVI Peon (1, 5) -> (2, 5)
 NUEVA PARTIDA Alons VS Javi
 NUEVA PARTIDA Alonso VS Javi
+NUEVA PARTIDA Alonso VS Javi
+Javi Peon (1, 1) -> (2, 1)

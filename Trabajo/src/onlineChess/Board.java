@@ -202,7 +202,7 @@ public class Board implements Serializable {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				Pieza p = getTablero(new Posicion(i, j));
-				if (p != null) {
+				if (p != null && p.getLado() == lado) {
 					piezas.add(p);
 				}
 			}
@@ -221,7 +221,7 @@ public class Board implements Serializable {
 		tablero[pieza.getPosicion().fila()][pieza.getPosicion().columna()] = null;
 
 		// Comprobar si el peón ha llegado a la última fila para la promoción
-		if (pieza.getTipo() == 0 && (posicion.fila() == 0 || posicion.fila() == 7)) {
+		/*if (pieza.getTipo() == 0 && (posicion.fila() == 0 || posicion.fila() == 7)) {
 			// Si el peón llega a la última fila, solicitamos al jugador elegir la pieza con
 			// la que promocionar
 			String nuevaPieza = elegirPiezaPromocion(pieza.getLado());
@@ -246,7 +246,7 @@ public class Board implements Serializable {
 				System.out.println("Elección no válida, el peón se mantendrá.");
 				break;
 			}
-		}
+		}*/
 
 		pieza.setPosicion(posicion);
 		return target; // si devuelve null, sabemos que solo se ha movido, si no, devuelve la ficha que
@@ -295,13 +295,16 @@ public class Board implements Serializable {
 		}
 
 		if (!reyN && reyB) {
+			System.out.println("HAN GANADO BLANCAS");
 			return true;
 		}
 
 		if (reyN && !reyB) {
+			System.out.println("HAN GANADO NEGRAS");
 			return false;
 		}
 
+		System.out.println("NO GANA NADIE");
 		return null;
 	}
 }

@@ -40,7 +40,7 @@ public class Sala implements Runnable{
 		
 		// Crear archivo de historial para el usuario de las blancas
 		try {
-            fileOutputB = new FileOutputStream(userB.getNombre() + "Blancas.txt", true); 
+            fileOutputB = new FileOutputStream(userB.getNombre() + ".txt", true); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class Sala implements Runnable{
 		
 		// Crear archivo de historial para el usuario de las negras
         try {
-            fileOutputN = new FileOutputStream(userN.getNombre() + "Negras.txt", true);
+            fileOutputN = new FileOutputStream(userN.getNombre() + ".txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,12 +108,13 @@ public class Sala implements Runnable{
     		oosN.flush();
     		
     		// Registrar inicio de la partida en los archivos de los usuarios
-            escribirEnHistorial(fileOutputB, "NUEVA PARTIDA " + userB.getNombre() + " VS " + userN.getNombre() + "\n");
-            escribirEnHistorial(fileOutputN, "NUEVA PARTIDA " + userB.getNombre() + " VS " + userN.getNombre() + "\n");
+            escribirEnHistorial(fileOutputB, "NUEVA PARTIDA " + userB.getNombre() + " BLANCAS VS " + userN.getNombre() + " NEGRAS\n");
+            escribirEnHistorial(fileOutputN, "NUEVA PARTIDA " + userB.getNombre() + " BLANCAS VS " + userN.getNombre() + " NEGRAS\n");
     		
     		boolean lado = true;
+    		Boolean quienGana = board.quienGana();
     		
-    		while(board.quienGana() == null) {
+    		while(quienGana == null) {
     			if(lado) {
     				System.out.println("Turno blancas");
     				
@@ -128,7 +129,10 @@ public class Sala implements Runnable{
 	    			System.out.println("Leido "+action);
 	    			if(action.equals("DESCONECTAR")) {
 	    				System.out.println("Las blancas solicitan desconectarse");
-	    				//AQUI GESTIONAMOS LA DESCONEXION
+	    				oosN.writeBytes("GANA\n");
+	    				oosN.flush();
+	    				quienGana = false;
+	    				break;
 	    			}
 	    			
 	    			Posicion from = (Posicion) oisB.readObject();
@@ -158,7 +162,10 @@ public class Sala implements Runnable{
 	    			System.out.println("Leido "+action);
 	    			if(action.equals("DESCONECTAR")) {
 	    				System.out.println("Las negras solicitan desconectarse");
-	    				//AQUI GESTIONAMOS LA DESCONEXION
+	    				oosB.writeBytes("GANA\n");
+	    				oosB.flush();
+	    				quienGana = true;
+	    				break;
 	    			}else {
 	    				System.out.println("Las negras solicitan continuar");
 	    			}
@@ -180,9 +187,10 @@ public class Sala implements Runnable{
     			}
     			
     			lado = !lado;
+    			quienGana = board.quienGana();
     		}
     		
-    		if(board.quienGana() == true) {
+    		if(quienGana == true) {
     			oosN.writeBytes("PIERDE\n");
     			oosB.writeBytes("GANA\n");
     			
@@ -201,6 +209,10 @@ public class Sala implements Runnable{
     			escribirEnHistorial(fileOutputB, "FIN DE LA PARTIDA: " + userB.getNombre() + " PIERDE\n");
                 escribirEnHistorial(fileOutputN, "FIN DE LA PARTIDA: " + userN.getNombre() + " GANA\n");
     		}
+    		
+    		oosN.flush();
+    		oosB.flush();
+    		
     		
     		//DESCONECTAMOS
             

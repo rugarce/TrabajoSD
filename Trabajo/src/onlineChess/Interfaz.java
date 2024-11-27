@@ -83,6 +83,7 @@ public class Interfaz extends JFrame {
         panelOpciones.add(btnDesconectar);
         
         setVisible(true);
+        actualizarTablero(new Board());
     }
     
     // ACTIVAR EL BOTÓN DE DESCONEXIÓN CUANDO SE EMPIEZA UNA PARTIDA
@@ -114,6 +115,7 @@ public class Interfaz extends JFrame {
                     asignarImagen(pieza, botonesTablero[i][j]);  
                 } else {
                     botonesTablero[i][j].setIcon(null);  // Casilla vacía
+                    
                 }
             }
         }
@@ -135,6 +137,13 @@ public class Interfaz extends JFrame {
                 	
                 	if(posiciones.size() == 0) { // Si no se puede mover a ninguna posición, acabamos
                 		posicionSeleccionada = null; //No se puede hacer ningún movimiento
+                		
+                		for(int i = 0; i < SIZE; i++) {
+                    		for(int j = 0; j < SIZE; j++) {
+                    			botonesTablero[i][j].setBackground(new Color(245,0,0)); // Ponemos el color de fondo a rojo
+                    		}
+                    	}
+                		
                 		return;
                 	}
                 	
@@ -152,12 +161,21 @@ public class Interfaz extends JFrame {
                 	posicionSeleccionada = null; // Reseteamos la selección (no se puede hacer ningún movimiento con la casilla elegida)
                 }
             } else {
-                // Intentamos mover la pieza (previamente guardada en piezaSeleccionada)
+
                 Posicion destino = new Posicion(fila, columna);
                 
-                enviarMovimiento(posicionSeleccionada, destino);
+                if(botonesTablero[fila][columna].getBackground().equals(new Color(58,168,50))) {
+	                // Intentamos mover la pieza (previamente guardada en piezaSeleccionada)
                 
-                posicionSeleccionada = null;  // Reseteamos la selección 
+                	enviarMovimiento(posicionSeleccionada, destino);
+                	posicionSeleccionada = null;  // Reseteamos la selección 
+                }
+                
+                if(board.getTablero(destino) != null && board.getTablero(destino).getLado() == miLado) {
+                	posicionSeleccionada = null;  // Reseteamos la selección 
+                	moverPieza(fila, columna);
+                }
+                
             }
         }
     }
