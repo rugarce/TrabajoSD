@@ -65,26 +65,30 @@ public class Client {
 					
 					String estado = ois.readLine();
 					if(estado.equals("EXISTE")) {
-						System.out.println("RECIBIDO recibido existe" +estado);
-						
+
+						System.out.println("\n\n------------HISTORIAL DE PARTIDAS------------");
 						String linea = ois.readLine();
 			            // Leemos el archivo y enviamos los datos en bloques
 			            while (!linea.equals("FIN")) {
 			                System.out.println(linea);
 			                linea = ois.readLine();
 			            }
+						System.out.println("---------------------------------------------\n\n");
+						
+					}else{
+						System.out.println("Usted no ha jugado ninguna partida, no dispone de historial");
 					}
 					break;
 				case "LISTADO PUNTUACIONES":
 					oos.writeBytes(opcion+"\n");
 					oos.flush();
 					
-					System.out.println("------------RANKING------------");
+					System.out.println("\n\n------------RANKING------------");
 					Map<String, Integer> puntuaciones = (Map<String, Integer>) ois.readObject();
 					for (Map.Entry<String, Integer> m : puntuaciones.entrySet()) {
 			            System.out.println(m.getKey() + ": " + m.getValue());
 			        }
-					System.out.println("-------------------------------");
+					System.out.println("-------------------------------\n\n");
 
 					break;
 				}
@@ -92,11 +96,30 @@ public class Client {
 				opcion = getOpcion(scanner);
 				
 			}
+			
+			oos.writeBytes("DESCONECTAR\n");
+			oos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
+			if(oos != null) {
+				try {
+					oos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if(ois != null) {
+				try {
+					ois.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			if(s != null) {
 				try {
 					s.close();
@@ -154,21 +177,16 @@ public class Client {
 			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
 			String resultado = null;
 			while((resultado = ois.readLine()) != null) {
-				System.out.println("MENSAJE DEL SERVIDOR " + resultado);
 				if(resultado.equals("CONTINUA")) {
 					System.out.println("Es su turno");
 					
 					// Leemos el tablero que proviene de la sala				
 					tablero = (Board) ois.readObject();
-					System.out.println("recibido tablero");
 					
 					interfaz.recibirActualizacionTablero(tablero, true);
-					System.out.println("tablero actualizado");
 					
 					// Obtenemos el movimiento desde la interfaz
 					obtenerMovimiento();
-
-					System.out.println("movimiento obtenido");
 					
 					boolean continuar = !interfaz.getDesconexion();
 					
@@ -184,7 +202,7 @@ public class Client {
 						oos.writeObject(to);
 						oos.reset();
 						
-						System.out.println("Enviado al servidor movimiento de " + from.toString() + " a " + to.toString());
+						System.out.println("Pieza movida de " + from.toString() + " a " + to.toString());
 						
 						// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
 					}else {
@@ -202,8 +220,6 @@ public class Client {
 				}else {
 					break;
 				}
-				
-				System.out.println("LLEGA AQUI");
 			}
 			
 			if(resultado.equals("PIERDE") || resultado.equals("GANA")) {
@@ -218,7 +234,7 @@ public class Client {
 			
 			interfaz.dispose();
 		}else {
-			System.out.println("ERROR:Error en la conexión a la sala");
+			System.out.println("Error en la conexión a la sala");
 		}
 	}
 	
