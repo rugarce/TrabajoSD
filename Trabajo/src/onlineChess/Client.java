@@ -13,8 +13,12 @@ public class Client {
 	
 	private static Socket s = null;
 	private static Interfaz interfaz = null;
+	private static String username = null;
+	public static String opcion = null;
 	
 	private static final Object lock = new Object();
+	private static final Object lockInicial = new Object();
+	private static final Object lockOpcion = new Object();
 	
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
@@ -28,27 +32,37 @@ public class Client {
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
 			
-			System.out.println("Ingrese su nombre de usuario:");
-			String username = scanner.nextLine();
+			System.out.println("hola");
 			
-			oos.writeBytes(username+"\n");
-			oos.flush();
+			//Iniciamos la interfaz
+        	ClienteInterfaz clienteInterfaz = new ClienteInterfaz();
+        	boolean usuarioCorrecto = false;
+        	
+        	while(!usuarioCorrecto) {
+        		// Obtenemos el nombre de usuario esperando a la interfaz inicial
+    			obtenerNombreUsuario();
+    			
+    			oos.writeBytes(username+"\n");
+    			oos.flush();
+    			
+    			String loginResponse = ois.readLine();
+    			
+    			if(loginResponse.startsWith("OK:")) {
+    				System.out.println(loginResponse);
+    				usuarioCorrecto = true;
+    				ClienteInterfaz.enviarUsuarioCorrectoDesdeCliente(true);
+    			}else {
+    				ClienteInterfaz.enviarUsuarioCorrectoDesdeCliente(false);
+    				if(loginResponse.startsWith("ERROR:")) {
+    					System.out.println(loginResponse);
+    				}else {
+    					System.out.println("ERROR:Error desconocido");
+    				}
+    			}
+        	}
+			// AQUÍ YA SE HA INTRODUCIDO BIEN EL USUARIO
 			
-			String loginResponse = ois.readLine();
-			
-			if(loginResponse.startsWith("OK:")) {
-				System.out.println(loginResponse);
-			}else {
-				if(loginResponse.startsWith("ERROR:")) {
-					System.out.println(loginResponse);
-					return;
-				}else {
-					System.out.println("ERROR:Error desconocido");
-					return;
-				}
-			}
-			
-			String opcion = getOpcion(scanner); // Nos unimos a la partida automáticamente
+			getOpcion(); 
 
 			while (!opcion.equals("DESCONECTAR")) {
 				switch (opcion) {
@@ -93,7 +107,7 @@ public class Client {
 					break;
 				}
 
-				opcion = getOpcion(scanner);
+				getOpcion();
 				
 			}
 			
@@ -131,14 +145,25 @@ public class Client {
 	}
 	
 	
-	static String getOpcion(Scanner scanner) {
-		System.out.println("Qué desea hacer?");
-		System.out.println("-UNIRME A PARTIDA");
-		System.out.println("-OBTENER HISTORIAL");
-		System.out.println("-LISTADO PUNTUACIONES");
-		System.out.println("-DESCONECTAR");
-		return scanner.nextLine();
-		//return "UNIRME A PARTIDA";
+	private static void getOpcion() {
+		synchronized (lockOpcion) {
+	        try {
+	            
+	        	lockOpcion.wait();
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            System.err.println("La espera fue interrumpida.");
+	        }
+	    }
+	}
+	
+	public static void setOpcionDesdeClienteInterfaz(String opcionElegida) {
+		synchronized (lockOpcion) {
+			
+			opcion = opcionElegida;
+			// Notifica al cliente que hay una opción elegida
+			lockOpcion.notify();
+		}
 	}
 	
 	static void play(ObjectInputStream ois, ObjectOutputStream oos) throws IOException, ClassNotFoundException {
@@ -235,6 +260,30 @@ public class Client {
 			interfaz.dispose();
 		}else {
 			System.out.println("Error en la conexión a la sala");
+		}
+	}
+	
+	// Métodos para leer nombre de usuario y esperar a la interfaz Inicial
+	private static void obtenerNombreUsuario() {
+		synchronized (lockInicial) {
+	        try {
+	        	
+	            // Bloquea el cliente hasta que la interfaz devuelva el nombre de usuario
+	        	lockInicial.wait();
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            System.err.println("La espera fue interrumpida.");
+	        }
+	    }
+	}
+	
+	public static void enviarNombreUsuarioDesdeClienteInterfaz(String usuario) {
+		synchronized (lockInicial) {
+			
+			username = usuario;
+			
+			// Notifica al cliente que hay un movimiento disponible
+			lockInicial.notify();
 		}
 	}
 	

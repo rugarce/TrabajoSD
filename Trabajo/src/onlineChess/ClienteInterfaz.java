@@ -12,6 +12,10 @@ public class ClienteInterfaz extends JFrame {
     private JButton botonIniciarSesion;
     private JLabel etiquetaMensaje;
     private String nombreUsuario; // Variable para almacenar el nombre del usuario
+    
+    public static boolean usuarioCorrecto = false;
+    
+    private static final Object lock = new Object();
 
     public ClienteInterfaz() {
         setTitle("Ajedrez en Línea");
@@ -28,6 +32,8 @@ public class ClienteInterfaz extends JFrame {
         panelPrincipal.add(panelInicioSesion, "InicioSesion");
         
         add(panelPrincipal);
+        
+        this.setVisible(true);
 
     }
 
@@ -63,14 +69,17 @@ public class ClienteInterfaz extends JFrame {
         botonIniciarSesion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                nombreUsuario = campoUsuario.getText().trim();
-                if (nombreUsuario.isEmpty()) {
-                    etiquetaMensaje.setText("El nombre de usuario no puede estar vacío.");
-                } else {
-                    // Simular validación del usuario con el servidor
-                    boolean usuarioValido = validarUsuario(nombreUsuario);
-                    if (usuarioValido) {
-                    	
+            	
+            	while(!usuarioCorrecto) {
+            		// Obtenemos el usuario escrito
+            		nombreUsuario = campoUsuario.getText().trim();
+                    Client.enviarNombreUsuarioDesdeClienteInterfaz(nombreUsuario);
+                    
+                    // Esperamos para ver si el usuario es correcto
+                    esperaUsuarioCorrecto();
+                    if (!usuarioCorrecto) {
+                        etiquetaMensaje.setText("Nombre de usuario inválido");
+                    } else {
                     	// Pantalla principal con opciones
                         panelOpciones = crearPanelOpciones();
                         panelPrincipal.add(panelOpciones, "Opciones");
@@ -78,10 +87,8 @@ public class ClienteInterfaz extends JFrame {
                         add(panelPrincipal);
                         
                         cambiarAPanelOpciones();
-                    } else {
-                        etiquetaMensaje.setText("Nombre de usuario inválido o ya en uso.");
                     }
-                }
+            	}
             }
         });
 
@@ -134,11 +141,6 @@ public class ClienteInterfaz extends JFrame {
         return boton;
     }
 
-    private boolean validarUsuario(String nombreUsuario) {
-        // Aquí puedes añadir lógica para validar el usuario con el servidor
-        return true; // Simula un usuario válido
-    }
-
     private void cambiarAPanelOpciones() {
         // Cambiar al panel de opciones
         CardLayout layout = (CardLayout) panelPrincipal.getLayout();
@@ -146,30 +148,44 @@ public class ClienteInterfaz extends JFrame {
     }
 
     private void unirseAPartida() {
-        JOptionPane.showMessageDialog(this, "Funcionalidad de Unirse a Partida no implementada aún.");
-        // Aquí puedes añadir lógica para unirse a una partida
+    	
+        Client.setOpcionDesdeClienteInterfaz("UNIRME A PARTIDA");
     }
 
     private void obtenerHistorial() {
-        JOptionPane.showMessageDialog(this, "Funcionalidad de Obtener Historial no implementada aún.");
-        // Aquí puedes añadir lógica para obtener el historial del usuario
+    	Client.setOpcionDesdeClienteInterfaz("OBTENER HISTORIAL");
     }
 
     private void listadoPuntuaciones() {
-        JOptionPane.showMessageDialog(this, "Funcionalidad de Listado de Puntuaciones no implementada aún.");
-        // Aquí puedes añadir lógica para obtener el listado de puntuaciones
+    	Client.setOpcionDesdeClienteInterfaz("LISTADO PUNTUACIONES");
     }
 
     private void desconectarse() {
         JOptionPane.showMessageDialog(this, "Desconectándose...");
-        // Aquí puedes añadir lógica para desconectarse del servidor
+        Client.setOpcionDesdeClienteInterfaz("DESCONECTAR");
         dispose(); // Cierra la ventana
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ClienteInterfaz interfaz = new ClienteInterfaz();
-            interfaz.setVisible(true);
-        });
+    
+    private static void esperaUsuarioCorrecto() {
+    	synchronized (lock) {
+	        try {
+	            // Bloquea el ClienteInterfaz hasta que el servidor notifique si el nombre es correcto
+	            lock.wait();
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            System.err.println("La espera fue interrumpida.");
+	        }
+	    }
     }
+    
+ // Método que la interfaz debe invocar para enviar un movimiento
+ 	public static void enviarUsuarioCorrectoDesdeCliente(boolean valor) {
+ 	    synchronized (lock) {
+ 	    	
+ 	        usuarioCorrecto = valor;
+
+ 	        // Notifica a la interfaz si el usuario es correcto o no
+ 	        lock.notify();
+ 	    }
+ 	}
 }
