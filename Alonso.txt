@@ -1,0 +1,31 @@
+NUEVA PARTIDA Alonso BLANCAS VS JAVIER NEGRAS
+Alonso Peon (6, 4) -> (4, 4)
+Alonso Caballo (7, 1) -> (5, 2)
+Alonso Caballo (5, 2) -> (3, 1)
+Alonso se come a Peon
+Alonso Caballo (3, 1) -> (2, 3)
+Alonso se come a Peon
+NUEVA PARTIDA Alonso BLANCAS VS Javi NEGRAS
+Alonso Peon (6, 3) -> (4, 3)
+FIN DE LA PARTIDA: Alonso GANA
+NUEVA PARTIDA Javi BLANCAS VS Alonso NEGRAS
+Alonso Peon (1, 4) -> (2, 4)
+Alonso Peon (2, 4) -> (3, 4)
+Alonso Peon (1, 3) -> (2, 3)
+FIN DE LA PARTIDA: Alonso PIERDE
+NUEVA PARTIDA Javi BLANCAS VS Alonso NEGRAS
+Alonso Peon (1, 5) -> (3, 5)
+Alonso Peon (3, 5) -> (4, 4)
+Alonso se come a Peon
+FIN DE LA PARTIDA: Alonso PIERDE
+NUEVA PARTIDA Alonso BLANCAS VS Javi NEGRAS
+Alonso Peon (6, 4) -> (4, 4)
+Alonso Dama (7, 3) -> (3, 7)
+Alonso Dama (3, 7) -> (0, 4)
+Alonso se come a Rey
+FIN DE LA PARTIDA: Alonso GANA
+NUEVA PARTIDA Alonso BLANCAS VS Javi NEGRAS
+FIN DE LA PARTIDA: Alonso PIERDE
+NUEVA PARTIDA Alonso BLANCAS VS Javi NEGRAS
+Alonso Peon (6, 2) -> (4, 2)
+FIN DE LA PARTIDA: Alonso GANA

@@ -60,7 +60,7 @@ public class AtenderUsuario implements Runnable {
 
 			boolean waitingToFinish = false;
 
-			while (!action.equals("DESCONECTAR") && action != null && !waitingToFinish) {
+			while (action != null && !action.equals("DESCONECTAR") && !waitingToFinish) {
 				switch (action) {
 				case ("UNIRME A PARTIDA"):
 					Sala sala = null;

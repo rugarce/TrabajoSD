@@ -234,6 +234,7 @@ public class Client {
 						System.out.println("DESCONECTAMOS");
 						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 						oos.flush();
+						resultado = ois.readLine();
 						break;
 					}
 					oos.flush();

@@ -129,8 +129,6 @@ public class Sala implements Runnable{
 	    			System.out.println("Leido "+action);
 	    			if(action.equals("DESCONECTAR")) {
 	    				System.out.println("Las blancas solicitan desconectarse");
-	    				oosN.writeBytes("GANA\n");
-	    				oosN.flush();
 	    				quienGana = false;
 	    				break;
 	    			}
@@ -162,8 +160,6 @@ public class Sala implements Runnable{
 	    			System.out.println("Leido "+action);
 	    			if(action.equals("DESCONECTAR")) {
 	    				System.out.println("Las negras solicitan desconectarse");
-	    				oosB.writeBytes("GANA\n");
-	    				oosB.flush();
 	    				quienGana = true;
 	    				break;
 	    			}else {
@@ -194,8 +190,10 @@ public class Sala implements Runnable{
     			oosN.writeBytes("PIERDE\n");
     			oosB.writeBytes("GANA\n");
     			
-    			Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() - 10);
-    			Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() + 10);
+    			//Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() - 10);
+    			//Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() + 10);
+    			
+    			actualizarPuntuaciones(userN.getNombre(), userB.getNombre(), 0, 32);
     			
     			escribirEnHistorial(fileOutputB, "FIN DE LA PARTIDA: " + userB.getNombre() + " GANA\n");
                 escribirEnHistorial(fileOutputN, "FIN DE LA PARTIDA: " + userN.getNombre() + " PIERDE\n");
@@ -203,8 +201,10 @@ public class Sala implements Runnable{
     			oosN.writeBytes("GANA\n");
     			oosB.writeBytes("PIERDE\n");
     			
-    			Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() + 10);
-    			Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() - 10);
+    			//Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() + 10);
+    			//Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() - 10);
+
+    			actualizarPuntuaciones(userN.getNombre(), userB.getNombre(), 1, 32);
     			
     			escribirEnHistorial(fileOutputB, "FIN DE LA PARTIDA: " + userB.getNombre() + " PIERDE\n");
                 escribirEnHistorial(fileOutputN, "FIN DE LA PARTIDA: " + userN.getNombre() + " GANA\n");
@@ -226,4 +226,20 @@ public class Sala implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
+	public static void actualizarPuntuaciones(String nombreA, String nombreB, double resultadoA, int kFactor) {
+        double puntuacionA = Server.users.get(nombreA).getPuntuacion();
+        double puntuacionB = Server.users.get(nombreB).getPuntuacion();
+
+        double EA = 1 / (1 + Math.pow(10, (puntuacionB - puntuacionA) / 400));
+        double EB = 1 / (1 + Math.pow(10, (puntuacionA - puntuacionB) / 400));
+
+        double resultadoB = 1 - resultadoA;
+
+        double nuevaPuntuacionA = puntuacionA + kFactor * (resultadoA - EA);
+        double nuevaPuntuacionB = puntuacionB + kFactor * (resultadoB - EB);
+
+        Server.users.get(nombreA).setPuntuacion((int) nuevaPuntuacionA);
+        Server.users.get(nombreB).setPuntuacion((int) nuevaPuntuacionB);
+    }
 }
