@@ -1,2 +1,0 @@
-NUEVA PARTIDA t VS j
-j Peon (1, 2) -> (2, 2)

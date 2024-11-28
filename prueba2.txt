@@ -1,7 +1,0 @@
-NUEVA PARTIDA prueba1 BLANCAS VS prueba2 NEGRAS
-prueba2 Peon (1, 4) -> (3, 4)
-prueba2 Dama (0, 3) -> (3, 6)
-prueba2 Rey (0, 4) -> (1, 4)
-FIN DE LA PARTIDA: prueba2 PIERDE
-NUEVA PARTIDA prueba2 BLANCAS VS prueba1 NEGRAS
-FIN DE LA PARTIDA: prueba2 PIERDE

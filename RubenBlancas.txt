@@ -1,7 +1,0 @@
-NUEVA PARTIDA Ruben VS Alonso
-Ruben Peon (6, 5) -> (4, 5)
-Ruben Peon (6, 4) -> (4, 4)
-Ruben Dama (7, 3) -> (3, 7)
-Ruben Dama (3, 7) -> (0, 4)
-Ruben se come a Rey
-FIN DE LA PARTIDA: Ruben GANA

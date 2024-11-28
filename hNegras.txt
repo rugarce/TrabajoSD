@@ -1,6 +1,0 @@
-NUEVA PARTIDA a VS h
-h Peon (1, 3) -> (3, 3)
-h Peon (3, 3) -> (4, 4)
-h se come a Peon
-h Peon (1, 5) -> (3, 5)
-FIN DE LA PARTIDA: h PIERDE
