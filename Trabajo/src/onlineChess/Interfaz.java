@@ -28,6 +28,11 @@ public class Interfaz extends JFrame {
     private Posicion movimientoOrigen;
 	private Posicion movimientoDestino;
 	
+	// Variables para el tiempo
+	private long tiempoRestanteMs; // Tiempo restante en milisegundos
+	private JLabel labelTimer;  // Muestra el tiempo restante
+    private Timer timer;  // Temporizador para contar el tiempo
+	
 	private JButton btnDesconectar = null;
 	private boolean desconexion = false;
 
@@ -80,10 +85,39 @@ public class Interfaz extends JFrame {
         		desconectarseDePartida();
         	}
         });
-        panelOpciones.add(btnDesconectar);
+        panelOpciones.add(btnDesconectar, BorderLayout.EAST);
+        
+        tiempoRestanteMs =  10 * 1000; // 1h en milisegundos
+        labelTimer = new JLabel(formatTiempo(tiempoRestanteMs), SwingConstants.CENTER);
+        labelTimer.setFont(new Font("Arial", Font.BOLD, 16));
+        panelOpciones.add(labelTimer, BorderLayout.CENTER);
+
+        timer = new Timer(10, new ActionListener() { // Actualiza cada 10 ms
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (esMiTurno) {
+                    tiempoRestanteMs -= 10; // Reducimos 10 ms
+                    labelTimer.setText(formatTiempo(tiempoRestanteMs));
+
+                    if (tiempoRestanteMs <= 0) {
+                        desconectarseDePartida();
+                    }
+                }
+            }
+        });
         
         setVisible(true);
         actualizarTablero(new Board());
+    }
+    
+    private String formatTiempo(long tiempoMs) {
+        long horas = tiempoMs / (60 * 60 * 1000);
+        long minutos = (tiempoMs / (60 * 1000)) % 60;
+        long segundos = (tiempoMs / 1000) % 60;
+        long decimas = (tiempoMs / 10) % 100;
+
+        return String.format("%02d:%02d:%02d.%02d", 
+                             horas, minutos, segundos, decimas);
     }
     
     // ACTIVAR EL BOTÓN DE DESCONEXIÓN CUANDO SE EMPIEZA UNA PARTIDA
@@ -201,6 +235,13 @@ public class Interfaz extends JFrame {
 		esMiTurno = turno;
 		
 		labelTurno.setText(esMiTurno ? "Es tu turno" : "Es el turno del oponente");
+		
+		// Manejo del temporizador
+        if (esMiTurno) {
+            timer.start();
+        } else {
+            timer.stop();
+        }
     }
     
     public Posicion getOrigen() {
@@ -214,13 +255,6 @@ public class Interfaz extends JFrame {
     public void setPosiciones(Posicion origen, Posicion destino) {
     	this.movimientoOrigen = origen;
     	this.movimientoDestino = destino;
-    }
-
-    // Método para mostrar el mensaje de fin de partida
-    public void mostrarFinDePartida(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje, "Fin de la partida", JOptionPane.INFORMATION_MESSAGE);
-        // Cerrar la ventana
-        System.exit(0);
     }
     
     // Asignar el lado en el que jugamos

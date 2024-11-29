@@ -58,7 +58,7 @@ public class AtenderUsuario implements Runnable {
 
 			String action = ois.readLine();
 
-			boolean waitingToFinish = false;
+			boolean waitingToFinish = false; //ESTO PARA QUE SIRVE??
 
 			while (action != null && !action.equals("DESCONECTAR") && !waitingToFinish) {
 				switch (action) {

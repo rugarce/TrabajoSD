@@ -250,11 +250,11 @@ public class Client {
 			
 			if(resultado.equals("PIERDE") || resultado.equals("GANA")) {
 				if(resultado.equals("PIERDE")) {
-					System.out.println("Ha ganado, felicidades");
+					System.out.println("Ha perdido");				
 				}
 				
 				if(resultado.equals("GANA")) {
-					System.out.println("Ha perdido");
+					System.out.println("Ha ganado, felicidades");
 				}
 			}
 			
