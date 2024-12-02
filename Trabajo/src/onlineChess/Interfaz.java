@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -42,6 +44,8 @@ public class Interfaz extends JFrame {
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // No se hará nada al cerrar
 
         // Inicializamos el tablero gráfico y los botones
         panelTablero = new JPanel(new GridLayout(SIZE, SIZE));
@@ -103,6 +107,19 @@ public class Interfaz extends JFrame {
                         desconectarseDePartida();
                     }
                 }
+            }
+        });
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+            	if(esMiTurno) {
+            		btnDesconectar.doClick();
+            	}else {
+            		JOptionPane.showMessageDialog(panelTablero, "Solo puede desconectarse cuando es su turno.");
+            	}
+                
             }
         });
         
