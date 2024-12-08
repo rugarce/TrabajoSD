@@ -103,7 +103,6 @@ public class Client {
 			            System.out.println(m.getKey() + ": " + m.getValue());
 			        }
 					System.out.println("-------------------------------\n\n");
-
 					break;
 				}
 
