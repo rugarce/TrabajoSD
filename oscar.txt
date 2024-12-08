@@ -1,0 +1,145 @@
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+oscar Peon (1, 5) -> (3, 5)
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+NUEVA PARTIDA andrea BLANCAS VS oscar NEGRAS
+oscar Peon (1, 5) -> (3, 5)
+oscar Peon (1, 3) -> (3, 3)
+oscar Peon (1, 2) -> (3, 2)
+oscar Peon (1, 4) -> (3, 4)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA andrea BLANCAS VS oscar NEGRAS
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+oscar Peon (1, 3) -> (3, 3)
+oscar Peon (1, 5) -> (3, 5)
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+oscar Peon (1, 5) -> (3, 5)
+oscar Peon (3, 5) -> (4, 4)
+oscar se come a Peon
+oscar Peon (1, 3) -> (3, 3)
+oscar Peon (1, 4) -> (2, 4)
+oscar Dama (0, 3) -> (1, 2)
+oscar se come a Caballo
+oscar Dama (1, 2) -> (4, 2)
+oscar se come a Peon
+oscar Dama (4, 2) -> (7, 5)
+oscar se come a Alfil
+oscar Peon (4, 4) -> (5, 4)
+oscar Peon (2, 4) -> (3, 4)
+oscar Alfil (0, 2) -> (5, 7)
+oscar Alfil (5, 7) -> (6, 6)
+oscar se come a Peon
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 4) -> (4, 4)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 3) -> (4, 3)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 4) -> (4, 4)
+oscar Peon (6, 5) -> (4, 5)
+oscar Dama (7, 3) -> (3, 7)
+oscar Dama (3, 7) -> (0, 4)
+oscar se come a Rey
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 5) -> (5, 5)
+oscar Peon (5, 5) -> (4, 5)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 7) -> (4, 7)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 6) -> (4, 6)
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 5) -> (4, 5)
+oscar Peon (6, 4) -> (4, 4)
+oscar Dama (7, 3) -> (3, 7)
+oscar Dama (3, 7) -> (0, 4)
+oscar se come a Rey
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA daniel BLANCAS VS oscar NEGRAS
+oscar Peon (1, 4) -> (3, 4)
+oscar Dama (0, 3) -> (4, 7)
+oscar Dama (4, 7) -> (7, 4)
+oscar se come a Rey
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA daniel BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA daniel BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS daniel NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: oscar PIERDE
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 4) -> (4, 4)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA oscar BLANCAS VS ruben NEGRAS
+oscar Peon (6, 4) -> (4, 4)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+oscar Peon (1, 1) -> (3, 1)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+oscar Peon (1, 2) -> (3, 2)
+FIN DE LA PARTIDA: oscar GANA
+NUEVA PARTIDA ruben BLANCAS VS oscar NEGRAS
+oscar Peon (1, 2) -> (3, 2)
+FIN DE LA PARTIDA: oscar GANA

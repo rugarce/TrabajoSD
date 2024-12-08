@@ -1,0 +1,25 @@
+NUEVA PARTIDA daniel BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: daniel PIERDE
+NUEVA PARTIDA ruben BLANCAS VS daniel NEGRAS
+FIN DE LA PARTIDA: daniel GANA
+NUEVA PARTIDA daniel BLANCAS VS ruben NEGRAS
+FIN DE LA PARTIDA: daniel PIERDE
+NUEVA PARTIDA daniel BLANCAS VS alonso NEGRAS
+daniel Peon (6, 4) -> (4, 4)
+daniel Dama (7, 3) -> (3, 7)
+daniel Dama (3, 7) -> (0, 4)
+daniel se come a Rey
+FIN DE LA PARTIDA: daniel GANA
+NUEVA PARTIDA daniel BLANCAS VS oscar NEGRAS
+daniel Peon (6, 4) -> (4, 4)
+daniel Peon (6, 5) -> (4, 5)
+daniel Peon (4, 5) -> (3, 4)
+daniel se come a Peon
+FIN DE LA PARTIDA: daniel PIERDE
+NUEVA PARTIDA daniel BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: daniel PIERDE
+NUEVA PARTIDA daniel BLANCAS VS oscar NEGRAS
+FIN DE LA PARTIDA: daniel PIERDE
+NUEVA PARTIDA oscar BLANCAS VS daniel NEGRAS
+FIN DE LA PARTIDA: daniel GANA
+NUEVA PARTIDA alonso BLANCAS VS daniel NEGRAS
