@@ -105,9 +105,7 @@ public class Client {
 					System.out.println("-------------------------------\n\n");
 					break;
 				}
-
 				getOpcion();
-				
 			}
 			
 			oos.writeBytes("DESCONECTAR\n");
