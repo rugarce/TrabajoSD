@@ -91,7 +91,7 @@ public class Interfaz extends JFrame {
         });
         panelOpciones.add(btnDesconectar, BorderLayout.EAST);
         
-        tiempoRestanteMs =  3600 * 1000; // 1h en milisegundos
+        tiempoRestanteMs =  10 * 1000; // 1h en milisegundos
         labelTimer = new JLabel(formatTiempo(tiempoRestanteMs), SwingConstants.CENTER);
         labelTimer.setFont(new Font("Arial", Font.BOLD, 16));
         panelOpciones.add(labelTimer, BorderLayout.CENTER);

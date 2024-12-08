@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ClienteInterfaz extends JFrame {
     private JPanel panelPrincipal;
@@ -12,6 +14,8 @@ public class ClienteInterfaz extends JFrame {
     private JButton botonIniciarSesion;
     private JLabel etiquetaMensaje;
     private String nombreUsuario; // Variable para almacenar el nombre del usuario
+    
+    private static JButton botonDesconectarse = null;
     
     public static boolean usuarioCorrecto = false;
     
@@ -32,6 +36,13 @@ public class ClienteInterfaz extends JFrame {
         panelPrincipal.add(panelInicioSesion, "InicioSesion");
         
         add(panelPrincipal);
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                botonDesconectarse.doClick();
+            }
+        });
         
         this.setVisible(true);
 
@@ -70,7 +81,7 @@ public class ClienteInterfaz extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
             	
-            	while(!usuarioCorrecto) {
+            	if(!usuarioCorrecto) {
             		// Obtenemos el usuario escrito
             		nombreUsuario = campoUsuario.getText().trim();
                     Client.enviarNombreUsuarioDesdeClienteInterfaz(nombreUsuario);
@@ -111,7 +122,7 @@ public class ClienteInterfaz extends JFrame {
         JButton botonUnirsePartida = crearBotonTablero("Unirse a Partida", true);
         JButton botonObtenerHistorial = crearBotonTablero("Obtener Historial", false);
         JButton botonListadoPuntuaciones = crearBotonTablero("Listado de Puntuaciones", false);
-        JButton botonDesconectarse = crearBotonTablero("Desconectarse", true);
+        botonDesconectarse = crearBotonTablero("Desconectarse", true);
 
         panelBotones.add(botonUnirsePartida);
         panelBotones.add(botonObtenerHistorial);

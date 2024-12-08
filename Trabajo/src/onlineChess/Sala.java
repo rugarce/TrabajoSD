@@ -8,6 +8,9 @@ import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 
 public class Sala implements Runnable{
+
+	//private Socket socketUserB; //socket del ususario de las piezas blancas
+	//private Socket socketUserN; //socket del ususario de las piezas negras
 	
 	ObjectInputStream oisB = null;
 	ObjectInputStream oisN = null;
@@ -71,9 +74,18 @@ public class Sala implements Runnable{
 	public void run() {
 		System.out.println("SALA INCIADA, A LA ESPERA DE LLENARSE PARA EMPEZAR");
 		
+		/*ObjectInputStream oisB = null;
+		ObjectInputStream oisN = null;
+		
+		ObjectOutputStream oosB = null;
+		ObjectOutputStream oosN = null;*/
+		
 		try {
             latch.await(); // Espera hasta que el contador sea cero
             System.out.println("Ambos usuarios están presentes. Comienza la partida.");
+
+    		//oosB = new ObjectOutputStream(socketUserB.getOutputStream());
+    		//oosN = new ObjectOutputStream(socketUserN.getOutputStream());
     		
     		//les indicamos a los usuarios que la partida empieza
     		oosB.writeBytes("START\n");
@@ -81,6 +93,9 @@ public class Sala implements Runnable{
 
     		oosB.flush();
     		oosN.flush();
+    		
+            //oisB = new ObjectInputStream(socketUserB.getInputStream());
+    		//oisN = new ObjectInputStream(socketUserN.getInputStream());
     		
     		System.out.println("Respuesta Acknowledge de las blancas:" + oisB.readLine());
     		System.out.println("Respuesta Acknowledge de las negras:" + oisN.readLine());
@@ -175,6 +190,9 @@ public class Sala implements Runnable{
     			oosN.writeBytes("PIERDE\n");
     			oosB.writeBytes("GANA\n");
     			
+    			//Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() - 10);
+    			//Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() + 10);
+    			
     			actualizarPuntuaciones(userN.getNombre(), userB.getNombre(), 0, 32);
     			
     			escribirEnHistorial(fileOutputB, "FIN DE LA PARTIDA: " + userB.getNombre() + " GANA\n");
@@ -182,6 +200,9 @@ public class Sala implements Runnable{
     		}else {
     			oosN.writeBytes("GANA\n");
     			oosB.writeBytes("PIERDE\n");
+    			
+    			//Server.users.get(userN.getNombre()).setPuntuacion(userN.getPuntuacion() + 10);
+    			//Server.users.get(userB.getNombre()).setPuntuacion(userB.getPuntuacion() - 10);
 
     			actualizarPuntuaciones(userN.getNombre(), userB.getNombre(), 1, 32);
     			

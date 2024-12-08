@@ -1,5 +1,6 @@
 package onlineChess;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,6 +9,13 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 
 public class Client {
 	
@@ -32,27 +40,31 @@ public class Client {
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
 			
-			System.out.println("hola");
-			
 			//Iniciamos la interfaz
         	ClienteInterfaz clienteInterfaz = new ClienteInterfaz();
         	boolean usuarioCorrecto = false;
         	
+        	// Mientras que el usuario no sea correcto, leemos el usuario  que nos pasa la interfaz
         	while(!usuarioCorrecto) {
-        		// Obtenemos el nombre de usuario esperando a la interfaz inicial
+        		// Obtenemos el nombre de usuario esperando a la interfaz inicial (bloqueamos)
     			obtenerNombreUsuario();
     			
+    			// Al llegar aquí, se ha desbloqueado porque se ha introducido un nombre y la interfaz se ha bloqueado
     			oos.writeBytes(username+"\n");
     			oos.flush();
     			
+    			// Leemos la respuesta del servidor
     			String loginResponse = ois.readLine();
     			
     			if(loginResponse.startsWith("OK:")) {
     				System.out.println(loginResponse);
-    				usuarioCorrecto = true;
-    				ClienteInterfaz.enviarUsuarioCorrectoDesdeCliente(true);
+    				usuarioCorrecto = true; // para finalizar el bucle
+    				
+    				// Desbloqueamos ClienteInterfaz para que pueda cambiar al siguiente panel de opciones
+    				clienteInterfaz.enviarUsuarioCorrectoDesdeCliente(true);
     			}else {
-    				ClienteInterfaz.enviarUsuarioCorrectoDesdeCliente(false);
+    				// Si el usuario no es correcto, se lo decimos a ClienteInterfaz
+    				clienteInterfaz.enviarUsuarioCorrectoDesdeCliente(false);
     				if(loginResponse.startsWith("ERROR:")) {
     					System.out.println(loginResponse);
     				}else {
@@ -62,6 +74,7 @@ public class Client {
         	}
 			// AQUÍ YA SE HA INTRODUCIDO BIEN EL USUARIO
 			
+        	// Bloqueamos el cliente para obtener la opción
 			getOpcion(); 
 
 			while (!opcion.equals("DESCONECTAR")) {
@@ -74,38 +87,85 @@ public class Client {
 					
 					break;
 				case "OBTENER HISTORIAL":
-					oos.writeBytes(opcion+"\n");
-					oos.flush();
-					
-					String estado = ois.readLine();
-					if(estado.equals("EXISTE")) {
+					 oos.writeBytes(opcion + "\n");
+					    oos.flush();
 
-						System.out.println("\n\n------------HISTORIAL DE PARTIDAS------------");
-						String linea = ois.readLine();
-			            // Leemos el archivo y enviamos los datos en bloques
-			            while (!linea.equals("FIN")) {
-			                System.out.println(linea);
-			                linea = ois.readLine();
-			            }
-						System.out.println("---------------------------------------------\n\n");
-						
-					}else{
-						System.out.println("Usted no ha jugado ninguna partida, no dispone de historial");
-					}
+					    String estado = ois.readLine();
+					    if (estado.equals("EXISTE")) {
+					        // Crear el JFrame para mostrar el historial
+					        JFrame frame = new JFrame("Historial de Partidas");
+					        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					        frame.setSize(500, 400);
+					        frame.setLayout(new BorderLayout());
+
+					        // Crear un JTextArea para mostrar el historial
+					        JTextArea textArea = new JTextArea();
+					        textArea.setEditable(false);
+
+					        // Crear un JScrollPane para permitir scroll si el contenido es largo
+					        JScrollPane scrollPane = new JScrollPane(textArea);
+
+					        // Leer las líneas y agregarlas al JTextArea
+					        StringBuilder historial = new StringBuilder("\n\n------------HISTORIAL DE PARTIDAS------------\n");
+					        String linea = ois.readLine();
+					        while (!linea.equals("FIN")) {
+					            historial.append(linea).append("\n");
+					            linea = ois.readLine();
+					        }
+					        historial.append("---------------------------------------------\n\n");
+					        textArea.setText(historial.toString());
+
+					        // Agregar el JScrollPane al JFrame
+					        frame.add(scrollPane, BorderLayout.CENTER);
+
+					        // Mostrar la ventana
+					        frame.setVisible(true);
+
+					    } else {
+					        JOptionPane.showMessageDialog(null, "Usted no ha jugado ninguna partida, no dispone de historial",
+					                "Historial Vacío", JOptionPane.INFORMATION_MESSAGE);
+					    }
 					break;
 				case "LISTADO PUNTUACIONES":
-					oos.writeBytes(opcion+"\n");
-					oos.flush();
-					
-					System.out.println("\n\n------------RANKING------------");
-					Map<String, Integer> puntuaciones = (Map<String, Integer>) ois.readObject();
-					for (Map.Entry<String, Integer> m : puntuaciones.entrySet()) {
-			            System.out.println(m.getKey() + ": " + m.getValue());
-			        }
-					System.out.println("-------------------------------\n\n");
+					oos.writeBytes(opcion + "\n");
+				    oos.flush();
+
+				    // Recibir las puntuaciones desde el servidor
+				    Map<String, Integer> puntuaciones = (Map<String, Integer>) ois.readObject();
+
+				    // Crear el JFrame para mostrar el ranking
+				    JFrame frame = new JFrame("Ranking de Puntuaciones");
+				    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				    frame.setSize(400, 300);
+				    frame.setLayout(new BorderLayout());
+
+				    // Crear el modelo para la tabla
+				    DefaultTableModel model = new DefaultTableModel();
+				    model.addColumn("Jugador");
+				    model.addColumn("Puntuación");
+
+				    // Agregar las puntuaciones al modelo de la tabla
+				    for (Map.Entry<String, Integer> m : puntuaciones.entrySet()) {
+				        model.addRow(new Object[]{m.getKey(), m.getValue()});
+				    }
+
+				    // Crear el JTable con el modelo
+				    JTable table = new JTable(model);
+				    table.setEnabled(false); // Hacer que la tabla no sea editable
+
+				    // Agregar el JTable a un JScrollPane para manejar el scroll
+				    JScrollPane scrollPane = new JScrollPane(table);
+
+				    // Agregar el JScrollPane al JFrame
+				    frame.add(scrollPane, BorderLayout.CENTER);
+
+				    // Mostrar la ventana
+				    frame.setVisible(true);
 					break;
 				}
+
 				getOpcion();
+				
 			}
 			
 			oos.writeBytes("DESCONECTAR\n");
@@ -156,9 +216,7 @@ public class Client {
 	
 	public static void setOpcionDesdeClienteInterfaz(String opcionElegida) {
 		synchronized (lockOpcion) {
-			
 			opcion = opcionElegida;
-			// Notifica al cliente que hay una opción elegida
 			lockOpcion.notify();
 		}
 	}
@@ -174,6 +232,7 @@ public class Client {
 			oos.flush();
 			
 			// Creamos la interfaz del tablero
+			interfaz = null;
 			interfaz = new Interfaz();
 			
 			System.out.println("Comienza la partida");
@@ -196,8 +255,7 @@ public class Client {
 			
 			//COMIENZA LA PARTIDA
 			
-			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue
-			//en pie, de lo contrario recibiremos GANA o PIERDE
+			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
 			String resultado = null;
 			while((resultado = ois.readLine()) != null) {
 				if(resultado.equals("CONTINUA")) {
@@ -219,7 +277,7 @@ public class Client {
 					
 					if(continuar) {
 						System.out.println("CONTINUAMOS");
-						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando
+						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 						oos.writeObject(from);
 						oos.reset();
 						oos.writeObject(to);
@@ -230,7 +288,7 @@ public class Client {
 						// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
 					}else {
 						System.out.println("DESCONECTAMOS");
-						oos.writeBytes("DESCONECTAR\n"); 
+						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
 						oos.flush();
 						resultado = ois.readLine();
 						break;
@@ -281,7 +339,7 @@ public class Client {
 			
 			username = usuario;
 			
-			// Notifica al cliente que hay un movimiento disponible
+			// Notifica al cliente que hay un nombre de usuario introducido
 			lockInicial.notify();
 		}
 	}

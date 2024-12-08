@@ -24,31 +24,36 @@ public class AtenderUsuario implements Runnable {
 	public void run() {
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
+		String username = null;
 
 		try {
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 
-			String username = ois.readLine();
-
-			if (existeUsuarioConectado(username)) {
-				oos.writeBytes("ERROR:usuario ya conectado\n");
-				oos.flush();
-				return;
-			}
+			username = ois.readLine();
 
 			Usuario user = null;
-			if (!existeUsuario(username)) {
-				user = new Usuario(username, 0);
-				Server.users.put(username, user);
-				oos.writeBytes("OK:nuevo usuario registrado\n");
-				System.out.println(user + " registrado como nuevo usuario");
-			} else {
-				user = getUsuario(username);
-				oos.writeBytes("OK:usuario logeado con éxito\n");
-				System.out.println(user + " logeado en el sistema");
+			while(user == null) {
+				if (existeUsuarioConectado(username)) { // Si el usuario introducido ya está conectado
+					oos.writeBytes("ERROR:usuario ya conectado\n");
+					oos.flush(); // Escribimos el error y leemos de nuevo el usuario
+					username = ois.readLine();
+				}else {
+					if (!existeUsuario(username)) {
+						user = new Usuario(username, 0);
+						addUsuario(username, user);
+						oos.writeBytes("OK:nuevo usuario registrado\n");
+						System.out.println(user + " registrado como nuevo usuario");
+					} else {
+						user = getUsuario(username);
+						oos.writeBytes("OK:usuario logeado con éxito\n");
+						System.out.println(user + " logeado en el sistema");
+					}
+					oos.flush();
+				}
 			}
-			oos.flush();
+			
+			addUsuarioConectado(username);
 
 			/*
 			 * AQUI SE DEBE RECIBIR UNA LÍNEA QUE INDIQUE QUE QUEREMOS HACER, SI QUEREMOS
@@ -58,7 +63,7 @@ public class AtenderUsuario implements Runnable {
 
 			String action = ois.readLine();
 
-			boolean waitingToFinish = false;
+			boolean waitingToFinish = false; //ESTO PARA QUE SIRVE??
 
 			while (action != null && !action.equals("DESCONECTAR") && !waitingToFinish) {
 				switch (action) {
@@ -87,6 +92,7 @@ public class AtenderUsuario implements Runnable {
 					} else {
 						// si no hay salas esperando se mete al usuario en una a la espera de
 						// emparejarse
+						// sala = new Sala(s, user);
 						sala = new Sala(user, ois, oos);
 						t = new Thread(sala);
 
@@ -122,6 +128,7 @@ public class AtenderUsuario implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			eliminarUsuarioConectado(username);
 			if (s != null) {
 				try {
 					s.close();
@@ -148,10 +155,10 @@ public class AtenderUsuario implements Runnable {
 		}
 	}
 
-	// a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado
-	// en alguna carpeta que creemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y 
-	// le manda todo el contenido al usuario que de lo descargara enviaremos el fichero en forma de bytes, 
-	// necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
+//	static void mostrarHistorial(Socket s, Usuario user) {
+//		//a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado en alguna carpeta que ceemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y le manda todo el contenido al usuario que de lo descargara 
+//		//enviaremos el fichero en forma de bytes, necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
+//	}
 	static void mostrarHistorial(ObjectOutputStream oos, Usuario user) {
 		// Ruta del archivo del historial del usuario
 		String rutaHistorial = user.getNombre() + ".txt";
@@ -164,6 +171,7 @@ public class AtenderUsuario implements Runnable {
 			
 			// Verificamos si el archivo existe
 			if (!archivoHistorial.exists()) {
+				// dos.writeUTF("El historial de partidas no existe.");
 				oos.writeBytes("NO EXISTE\n");
 
 				oos.flush();
@@ -174,6 +182,8 @@ public class AtenderUsuario implements Runnable {
 
 			oos.writeBytes("EXISTE\n");
 			oos.flush();
+			// Enviamos un mensaje que indica que estamos enviando el archivo
+			// dos.writeUTF("Inicio del historial de partidas: " + user.getNombre());
 
 			// Usamos un buffer para leer y enviar el archivo en bloques de bytes
 			byte[] buffer = new byte[1024];
@@ -296,21 +306,45 @@ public class AtenderUsuario implements Runnable {
 	}
 
 	// métodos synchronized de los usuarios
+	static Boolean addUsuarioConectado(String username) {
+		synchronized (Server.connectedUsers) {
+			return Server.connectedUsers.add(username);
+		}
+	}
+
+	
 	static Boolean existeUsuarioConectado(String username) {
 		synchronized (Server.connectedUsers) {
+			 System.out.println("Usuarios conectados:");
+			    for (String username1 : Server.connectedUsers) {
+			        System.out.println(username1);
+			    }
 			return Server.connectedUsers.contains(username);
+		}
+	}
+	
+	static void eliminarUsuarioConectado(String username) {
+		synchronized (Server.connectedUsers) {
+			Server.connectedUsers.remove(username);
 		}
 	}
 
 	static Boolean existeUsuario(String username) {
 		synchronized (Server.users) {
-			return Server.users.contains(username);
+			return Server.users.containsKey(username);
 		}
 	}
 
 	static Usuario getUsuario(String username) {
 		synchronized (Server.users) {
 			return Server.users.get(username);
+		}
+	}
+	
+	static void addUsuario(String username, Usuario user) {
+		synchronized (Server.users) {
+			Server.users.put(username, user);
+			Server.writeUserList();
 		}
 	}
 }
