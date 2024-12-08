@@ -91,7 +91,7 @@ public class Interfaz extends JFrame {
         });
         panelOpciones.add(btnDesconectar, BorderLayout.EAST);
         
-        tiempoRestanteMs =  10 * 1000; // 1h en milisegundos
+        tiempoRestanteMs =  3600 * 1000; // 1h en milisegundos
         labelTimer = new JLabel(formatTiempo(tiempoRestanteMs), SwingConstants.CENTER);
         labelTimer.setFont(new Font("Arial", Font.BOLD, 16));
         panelOpciones.add(labelTimer, BorderLayout.CENTER);
@@ -104,6 +104,7 @@ public class Interfaz extends JFrame {
                     labelTimer.setText(formatTiempo(tiempoRestanteMs));
 
                     if (tiempoRestanteMs <= 0) {
+                    	timer.stop();
                         desconectarseDePartida();
                     }
                 }
@@ -145,7 +146,9 @@ public class Interfaz extends JFrame {
     // CUANDO EL CLIENTE QUIERE DESCONECTARSE DE LA PARTIDA
     public void desconectarseDePartida() {
     	desconexion = true;
-    	
+    	if (timer != null) {
+            timer.stop();
+        }
     	// NOTIFICAMOS AL CLIENTE QUE SE QUEREMOS DESCONECTARNOS, ENVIANDO UN MOVIMIENTO NULO
     	Client.enviarMovimientoDesdeInterfaz(null, null);
     }

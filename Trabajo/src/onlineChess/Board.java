@@ -67,8 +67,7 @@ public class Board implements Serializable {
 
 	public ArrayList<Posicion> getMovimientosPosibles(Pieza pieza) {
 		ArrayList<Posicion> movimientos = new ArrayList<>();
-		int tipo = pieza.getTipo(); // El tipo de pieza (0 = peón, 1 = caballo, 2 = alfil, 3 = dama, 4 = rey, 5 =
-									// torre)
+		int tipo = pieza.getTipo(); // El tipo de pieza (0 = peón, 1 = caballo, 2 = alfil, 3 = dama, 4 = rey, 5 = torre)
 		boolean lado = pieza.getLado(); // true para blancas, false para negras
 		int fila = pieza.getPosicion().fila();
 		int columna = pieza.getPosicion().columna();
@@ -220,55 +219,8 @@ public class Board implements Serializable {
 		tablero[posicion.fila()][posicion.columna()] = pieza;
 		tablero[pieza.getPosicion().fila()][pieza.getPosicion().columna()] = null;
 
-		// Comprobar si el peón ha llegado a la última fila para la promoción
-		/*if (pieza.getTipo() == 0 && (posicion.fila() == 0 || posicion.fila() == 7)) {
-			// Si el peón llega a la última fila, solicitamos al jugador elegir la pieza con
-			// la que promocionar
-			String nuevaPieza = elegirPiezaPromocion(pieza.getLado());
-
-			// Actualizamos la pieza según la elección del jugador
-			switch (nuevaPieza) {
-			case "D": // Dama
-				pieza.setTipo(3); // El tipo de Dama es 3
-				break;
-			case "T": // Torre
-				pieza.setTipo(5); // El tipo de Torre es 5
-				break;
-			case "A": // Alfil
-				pieza.setTipo(2); // El tipo de Alfil es 2
-				break;
-			case "C": // Caballo
-				pieza.setTipo(1); // El tipo de Caballo es 1
-				break;
-			default:
-				// Si el jugador no elige una opción válida, mantenemos el peón (esto es
-				// opcional, podrías manejar esto con un mensaje de error)
-				System.out.println("Elección no válida, el peón se mantendrá.");
-				break;
-			}
-		}*/
-
 		pieza.setPosicion(posicion);
-		return target; // si devuelve null, sabemos que solo se ha movido, si no, devuelve la ficha que
-						// se ha comido
-	}
-	
-	public String elegirPiezaPromocion(boolean lado) {
-	    // Asumimos que el lado es true para blancas y false para negras
-	    String color = lado ? "Blanco" : "Negro";
-	    
-	    // Pedimos al jugador que elija la pieza a la que promover
-	    System.out.println(color + ", elige una pieza para promocionar el peón:");
-	    System.out.println("D - Dama");
-	    System.out.println("T - Torre");
-	    System.out.println("A - Alfil");
-	    System.out.println("C - Caballo");
-
-	    try (Scanner scanner = new Scanner(System.in)) {
-			String eleccion = scanner.nextLine().toUpperCase(); // Convertimos a mayúsculas para evitar problemas con mayúsculas/minúsculas
-
-			return eleccion; // Retornamos la elección del jugador
-		}
+		return target; // si devuelve null, sabemos que solo se ha movido, si no, devuelve la ficha que se ha comido
 	}
 
 	public Boolean quienGana() {
@@ -291,7 +243,8 @@ public class Board implements Serializable {
 		}
 
 		if (!reyN && !reyB) {
-			// ha habido un error
+			System.out.println("NO HAY NINGUN REY. ERROR");
+			return null;
 		}
 
 		if (!reyN && reyB) {

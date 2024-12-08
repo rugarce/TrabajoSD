@@ -58,7 +58,7 @@ public class AtenderUsuario implements Runnable {
 
 			String action = ois.readLine();
 
-			boolean waitingToFinish = false; //ESTO PARA QUE SIRVE??
+			boolean waitingToFinish = false;
 
 			while (action != null && !action.equals("DESCONECTAR") && !waitingToFinish) {
 				switch (action) {
@@ -87,7 +87,6 @@ public class AtenderUsuario implements Runnable {
 					} else {
 						// si no hay salas esperando se mete al usuario en una a la espera de
 						// emparejarse
-						// sala = new Sala(s, user);
 						sala = new Sala(user, ois, oos);
 						t = new Thread(sala);
 
@@ -149,10 +148,10 @@ public class AtenderUsuario implements Runnable {
 		}
 	}
 
-//	static void mostrarHistorial(Socket s, Usuario user) {
-//		//a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado en alguna carpeta que ceemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y le manda todo el contenido al usuario que de lo descargara 
-//		//enviaremos el fichero en forma de bytes, necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
-//	}
+	// a través del socket accede a un fichero llamado MUCHO OJO "nombredeusuario.txt" que estará almacenado
+	// en alguna carpeta que creemos asociado al usuario (todavía no esta creado) que contiene su historial de partidas y 
+	// le manda todo el contenido al usuario que de lo descargara enviaremos el fichero en forma de bytes, 
+	// necesitamos crear un dataOutputStream a partir del socket y enviarle todo el fichero en forma de bytes con lo del buffer
 	static void mostrarHistorial(ObjectOutputStream oos, Usuario user) {
 		// Ruta del archivo del historial del usuario
 		String rutaHistorial = user.getNombre() + ".txt";
@@ -165,7 +164,6 @@ public class AtenderUsuario implements Runnable {
 			
 			// Verificamos si el archivo existe
 			if (!archivoHistorial.exists()) {
-				// dos.writeUTF("El historial de partidas no existe.");
 				oos.writeBytes("NO EXISTE\n");
 
 				oos.flush();
@@ -176,8 +174,6 @@ public class AtenderUsuario implements Runnable {
 
 			oos.writeBytes("EXISTE\n");
 			oos.flush();
-			// Enviamos un mensaje que indica que estamos enviando el archivo
-			// dos.writeUTF("Inicio del historial de partidas: " + user.getNombre());
 
 			// Usamos un buffer para leer y enviar el archivo en bloques de bytes
 			byte[] buffer = new byte[1024];

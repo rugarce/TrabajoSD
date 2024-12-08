@@ -199,7 +199,8 @@ public class Client {
 			
 			//COMIENZA LA PARTIDA
 			
-			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue en pie, de lo contrario recibiremos GANA o PIERDE
+			//La variable resultado nos va actualizando del estado de la partida, si es CONTINUA significa que la partida sigue
+			//en pie, de lo contrario recibiremos GANA o PIERDE
 			String resultado = null;
 			while((resultado = ois.readLine()) != null) {
 				if(resultado.equals("CONTINUA")) {
@@ -221,7 +222,7 @@ public class Client {
 					
 					if(continuar) {
 						System.out.println("CONTINUAMOS");
-						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
+						oos.writeBytes("SEGUIR JUGANDO\n"); //le indicamos a la sala que seguimos jugando
 						oos.writeObject(from);
 						oos.reset();
 						oos.writeObject(to);
@@ -232,7 +233,7 @@ public class Client {
 						// RESETEAMOS LOS MOVIMIENTOS DE LA INTERFAZ
 					}else {
 						System.out.println("DESCONECTAMOS");
-						oos.writeBytes("DESCONECTAR\n"); //le indicamos a la sala que seguimos jugando (esto hay que hacerlo ya que tenemos la opcion de parar la partida)
+						oos.writeBytes("DESCONECTAR\n"); 
 						oos.flush();
 						resultado = ois.readLine();
 						break;
