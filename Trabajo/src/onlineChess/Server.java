@@ -16,6 +16,7 @@ public class Server {
 	
 	static ArrayList<Sala> runningSalas = new ArrayList<Sala>();
 	static ArrayList<Thread> runningSalasThreads = new ArrayList<Thread>();
+	
 	static ArrayList<Sala> waitingSalas = new ArrayList<Sala>();
 	static ArrayList<Thread> waitingSalasThreads = new ArrayList<Thread>();
 	
