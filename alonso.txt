@@ -37,3 +37,25 @@ alonso se come a Peon
 alonso Dama (5, 5) -> (6, 5)
 alonso se come a Rey
 FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso PIERDE
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+alonso Peon (1, 5) -> (3, 5)
+alonso Peon (3, 5) -> (4, 4)
+alonso se come a Peon
+alonso Peon (4, 4) -> (5, 4)
+FIN DE LA PARTIDA: alonso PIERDE
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso PIERDE
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso PIERDE
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso PIERDE

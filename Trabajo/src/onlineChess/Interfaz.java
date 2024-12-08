@@ -1,16 +1,25 @@
 package onlineChess;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class Interfaz extends JFrame {
 	
@@ -91,7 +100,7 @@ public class Interfaz extends JFrame {
         });
         panelOpciones.add(btnDesconectar, BorderLayout.EAST);
         
-        tiempoRestanteMs =  10 * 1000; // 1h en milisegundos
+        tiempoRestanteMs =  3600 * 1000; // 1h en milisegundos
         labelTimer = new JLabel(formatTiempo(tiempoRestanteMs), SwingConstants.CENTER);
         labelTimer.setFont(new Font("Arial", Font.BOLD, 16));
         panelOpciones.add(labelTimer, BorderLayout.CENTER);

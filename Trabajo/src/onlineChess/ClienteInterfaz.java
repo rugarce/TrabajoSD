@@ -37,10 +37,16 @@ public class ClienteInterfaz extends JFrame {
         
         add(panelPrincipal);
         
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                botonDesconectarse.doClick();
+            	if(botonDesconectarse!=null) {
+            		botonDesconectarse.doClick();
+            	}else {
+            		JOptionPane.showMessageDialog(panelPrincipal, "Primero introduce un nombre de usuario antes de cerrar.");
+            	}
+                
             }
         });
         
