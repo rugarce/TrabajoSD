@@ -1,0 +1,39 @@
+NUEVA PARTIDA alonso BLANCAS VS ruben NEGRAS
+alonso Peon (6, 4) -> (4, 4)
+alonso Dama (7, 3) -> (3, 7)
+alonso Dama (3, 7) -> (0, 4)
+alonso se come a Rey
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+FIN DE LA PARTIDA: alonso GANA
+NUEVA PARTIDA ruben BLANCAS VS alonso NEGRAS
+alonso Peon (1, 5) -> (3, 5)
+alonso Peon (1, 4) -> (2, 4)
+alonso Peon (1, 3) -> (2, 4)
+alonso se come a Peon
+alonso Peon (1, 6) -> (3, 6)
+alonso Peon (1, 7) -> (2, 7)
+alonso Peon (2, 7) -> (3, 6)
+alonso se come a Peon
+alonso Caballo (0, 6) -> (2, 7)
+alonso Rey (0, 4) -> (0, 5)
+alonso se come a Torre
+alonso Peon (1, 0) -> (3, 0)
+alonso Peon (2, 4) -> (3, 3)
+alonso se come a Peon
+alonso Caballo (2, 7) -> (4, 6)
+alonso se come a Peon
+alonso Caballo (4, 6) -> (6, 5)
+alonso Torre (0, 0) -> (2, 0)
+alonso Torre (2, 0) -> (2, 1)
+alonso Torre (2, 1) -> (7, 1)
+alonso se come a Caballo
+alonso Dama (0, 3) -> (1, 4)
+alonso Dama (1, 4) -> (1, 5)
+alonso Dama (1, 5) -> (5, 5)
+alonso se come a Peon
+alonso Dama (5, 5) -> (6, 5)
+alonso se come a Rey
+FIN DE LA PARTIDA: alonso GANA
